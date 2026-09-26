@@ -160,3 +160,14 @@ def test_title_echo_detects_repeated_title_or_year(ds, cfg):
     catalog = Catalog(ds.movies, cfg.resolve)
     answer = "Try [[m:5]] (Alien), [[m:2]] (1995) and [[m:10]] (a crime classic)."
     assert title_echoes(answer, catalog) == ["[[m:5]] (Alien)", "[[m:2]] (1995)"]
+
+
+def test_refresh_report_replaces_only_marked_blocks():
+    from movie_agent.evaluation.report_tables import refresh_report
+
+    text = (
+        "Intro\n<!-- table:x -->\nold\n<!-- /table:x -->\nkeep <!-- table:y -->old<!-- /table:y -->"
+    )
+    out = refresh_report(text, {"x": ["## Title `run`", "", "| a |", "|---|"]})
+    assert "old\n<!-- /table:x" not in out and "*Source: Title `run`*" in out and "| a |" in out
+    assert "<!-- table:y -->old<!-- /table:y -->" in out and out.startswith("Intro")

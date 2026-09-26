@@ -1,0 +1,463 @@
+{
+  "meta": {
+    "git_commit": "de4c522-dirty",
+    "config_hash": "97fe50f9e101"
+  },
+  "toy_story_top5_user_1": [
+    {
+      "movie_id": 2003,
+      "title": "Gremlins (1984)",
+      "genres": [
+        "Comedy",
+        "Horror"
+      ],
+      "rank": 1,
+      "contributions": {
+        "seed": 0.407,
+        "cf": 0.175,
+        "quality": 0.0
+      },
+      "n_ratings": 41,
+      "mean_rating": 3.38
+    },
+    {
+      "movie_id": 34,
+      "title": "Babe (1995)",
+      "genres": [
+        "Children",
+        "Drama"
+      ],
+      "rank": 2,
+      "contributions": {
+        "seed": 0.275,
+        "cf": 0.237,
+        "quality": 0.0
+      },
+      "n_ratings": 128,
+      "mean_rating": 3.65
+    },
+    {
+      "movie_id": 4011,
+      "title": "Snatch (2000)",
+      "genres": [
+        "Comedy",
+        "Crime",
+        "Thriller"
+      ],
+      "rank": 3,
+      "contributions": {
+        "seed": 0.085,
+        "cf": 0.241,
+        "quality": 0.185
+      },
+      "n_ratings": 93,
+      "mean_rating": 4.16
+    },
+    {
+      "movie_id": 317,
+      "title": "The Santa Clause (1994)",
+      "genres": [
+        "Comedy",
+        "Drama",
+        "Fantasy"
+      ],
+      "rank": 4,
+      "contributions": {
+        "seed": 0.415,
+        "cf": 0.089,
+        "quality": 0.0
+      },
+      "n_ratings": 81,
+      "mean_rating": 3.2
+    },
+    {
+      "movie_id": 2399,
+      "title": "Santa Claus: The Movie (1985)",
+      "genres": [
+        "Adventure",
+        "Children",
+        "Fantasy"
+      ],
+      "rank": 5,
+      "contributions": {
+        "seed": 0.5,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "n_ratings": 4,
+      "mean_rating": 2.25
+    }
+  ],
+  "toy_story_top5_user_15": [
+    {
+      "movie_id": 1097,
+      "title": "E.T. the Extra-Terrestrial (1982)",
+      "genres": [
+        "Children",
+        "Drama",
+        "Sci-Fi"
+      ],
+      "rank": 1,
+      "contributions": {
+        "seed": 0.345,
+        "cf": 0.254,
+        "quality": 0.0
+      },
+      "n_ratings": 122,
+      "mean_rating": 3.77
+    },
+    {
+      "movie_id": 4011,
+      "title": "Snatch (2000)",
+      "genres": [
+        "Comedy",
+        "Crime",
+        "Thriller"
+      ],
+      "rank": 2,
+      "contributions": {
+        "seed": 0.068,
+        "cf": 0.263,
+        "quality": 0.18
+      },
+      "n_ratings": 93,
+      "mean_rating": 4.16
+    },
+    {
+      "movie_id": 2253,
+      "title": "Toys (1992)",
+      "genres": [
+        "Comedy",
+        "Fantasy"
+      ],
+      "rank": 3,
+      "contributions": {
+        "seed": 0.5,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "n_ratings": 20,
+      "mean_rating": 2.38
+    },
+    {
+      "movie_id": 2399,
+      "title": "Santa Claus: The Movie (1985)",
+      "genres": [
+        "Adventure",
+        "Children",
+        "Fantasy"
+      ],
+      "rank": 4,
+      "contributions": {
+        "seed": 0.497,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "n_ratings": 4,
+      "mean_rating": 2.25
+    },
+    {
+      "movie_id": 1359,
+      "title": "Jingle All the Way (1996)",
+      "genres": [
+        "Children",
+        "Comedy"
+      ],
+      "rank": 5,
+      "contributions": {
+        "seed": 0.495,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "n_ratings": 18,
+      "mean_rating": 2.86
+    }
+  ],
+  "why_not_The Princess Bride": {
+    "code": "RANKED_BELOW",
+    "movie_id": 1197,
+    "title": "The Princess Bride (1987)",
+    "detail": {
+      "mode": "seed",
+      "n_ratings": 142,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Comedy",
+        "Fantasy",
+        "Romance"
+      ],
+      "rank": 31,
+      "k": 5,
+      "score": 0.454,
+      "contributions": {
+        "seed": 0.0,
+        "cf": 0.258,
+        "quality": 0.196
+      },
+      "rank_k_movie": "Jingle All the Way (1996)",
+      "rank_k_score": 0.495,
+      "rank_k_contributions": {
+        "seed": 0.495,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "largest_gap_feature": "seed",
+      "no_cf_signal": false
+    }
+  },
+  "why_not_Big": {
+    "code": "RANKED_BELOW",
+    "movie_id": 2797,
+    "title": "Big (1988)",
+    "detail": {
+      "mode": "seed",
+      "n_ratings": 91,
+      "genres": [
+        "Comedy",
+        "Drama",
+        "Fantasy",
+        "Romance"
+      ],
+      "rank": 9,
+      "k": 5,
+      "score": 0.49,
+      "contributions": {
+        "seed": 0.482,
+        "cf": 0.008,
+        "quality": 0.0
+      },
+      "rank_k_movie": "Jingle All the Way (1996)",
+      "rank_k_score": 0.495,
+      "rank_k_contributions": {
+        "seed": 0.495,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "largest_gap_feature": "seed",
+      "no_cf_signal": false
+    }
+  },
+  "why_not_Home Alone": {
+    "code": "RANKED_BELOW",
+    "movie_id": 586,
+    "title": "Home Alone (1990)",
+    "detail": {
+      "mode": "seed",
+      "n_ratings": 116,
+      "genres": [
+        "Children",
+        "Comedy"
+      ],
+      "rank": 144,
+      "k": 5,
+      "score": 0.271,
+      "contributions": {
+        "seed": 0.112,
+        "cf": 0.159,
+        "quality": 0.0
+      },
+      "rank_k_movie": "Jingle All the Way (1996)",
+      "rank_k_score": 0.495,
+      "rank_k_contributions": {
+        "seed": 0.495,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "largest_gap_feature": "seed",
+      "no_cf_signal": false
+    }
+  },
+  "why_not_Jumanji": {
+    "code": "RANKED_BELOW",
+    "movie_id": 2,
+    "title": "Jumanji (1995)",
+    "detail": {
+      "mode": "seed",
+      "n_ratings": 110,
+      "genres": [
+        "Adventure",
+        "Children",
+        "Fantasy"
+      ],
+      "rank": 171,
+      "k": 5,
+      "score": 0.233,
+      "contributions": {
+        "seed": 0.015,
+        "cf": 0.217,
+        "quality": 0.0
+      },
+      "rank_k_movie": "Jingle All the Way (1996)",
+      "rank_k_score": 0.495,
+      "rank_k_contributions": {
+        "seed": 0.495,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "largest_gap_feature": "seed",
+      "no_cf_signal": false
+    }
+  },
+  "dark_thriller_top5_user_15": [
+    {
+      "movie_id": 4878,
+      "title": "Donnie Darko (2001)",
+      "rank": 1,
+      "contributions": {
+        "query": 0.498,
+        "cf": 0.165,
+        "quality": 0.101
+      },
+      "flags": [],
+      "confidence": "high",
+      "plot_excerpt": "Monnitoff  about time travel after Frank brings up the topic, and is given the book The Philosophy of Time Travel, written by Roberta Sparrow , a former science teacher at the school who is now a seemingly senile old woman. Dr. Thurman tells Donnie's parents that he is detached from reality, and tha",
+      "n_ratings": 109
+    },
+    {
+      "movie_id": 1219,
+      "title": "Psycho (1960)",
+      "rank": 2,
+      "contributions": {
+        "query": 0.546,
+        "cf": 0.0,
+        "quality": 0.133
+      },
+      "flags": [],
+      "confidence": "high",
+      "plot_excerpt": "The plot revolves around a young man who prefers a lonely life. He begins to a stalk a television anchor named Pavana and starts interacting with her through his cell phone the number of which changes frequently. Pavana mysteriously gets help from some unknown person whom she can not identify . With",
+      "n_ratings": 83
+    },
+    {
+      "movie_id": 32,
+      "title": "Twelve Monkeys (a.k.a. 12 Monkeys) (1995)",
+      "rank": 3,
+      "contributions": {
+        "query": 0.303,
+        "cf": 0.183,
+        "quality": 0.118
+      },
+      "flags": [],
+      "confidence": "high",
+      "plot_excerpt": "A Greek chorus narrates and comments -- and Oedipus, Jocasta, Tiresias, and Cassandra sometimes directly intervene -- in this modern fable. Sportswriter Lenny Weinrib  is married to career-driven wife Amanda . She wants a baby and, because she cannot afford to get pregnant due to her job, she says t",
+      "n_ratings": 177
+    },
+    {
+      "movie_id": 6040,
+      "title": "Darkness Falls (2003)",
+      "rank": 4,
+      "contributions": {
+        "query": 0.6,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "flags": [
+        "few_ratings"
+      ],
+      "confidence": "low",
+      "plot_excerpt": "He soon realizes that the story of Matilda Dixon is not just a fable when he sees her in his room. Realizing that light is her weakness, he shines a flashlight into her face and hides in the bright lights of the bathroom. His mother, in trying to convince him there's nothing in his room, is killed a",
+      "n_ratings": 4
+    },
+    {
+      "movie_id": 436,
+      "title": "Color of Night (1994)",
+      "rank": 5,
+      "contributions": {
+        "query": 0.597,
+        "cf": 0.0,
+        "quality": 0.0
+      },
+      "flags": [],
+      "confidence": "high",
+      "plot_excerpt": "* Sondra Dorio  is a nymphomaniac and kleptomaniac. She stabbed her father with a knife and fork and one of her husbands died of unnatural causes. * Buck  is a suicidal ex-cop. The murder of his wife and daughter remains unsolved. * Casey Heinz ([[Kevin J. O'Connor  is the arrogant son of a wealthy ",
+      "n_ratings": 7
+    }
+  ],
+  "personal_top5_user_15": [
+    {
+      "title": "Blade Runner (1982)",
+      "because_you_rated": [
+        {
+          "movie_id": 1214,
+          "title": "Alien (1979)",
+          "user_rating": 5.0,
+          "ease_contribution": 0.0219
+        },
+        {
+          "movie_id": 1196,
+          "title": "Star Wars: Episode V - The Empire Strikes Back (1980)",
+          "user_rating": 5.0,
+          "ease_contribution": 0.0183
+        }
+      ]
+    },
+    {
+      "title": "The Silence of the Lambs (1991)",
+      "because_you_rated": [
+        {
+          "movie_id": 296,
+          "title": "Pulp Fiction (1994)",
+          "user_rating": 4.0,
+          "ease_contribution": 0.0521
+        },
+        {
+          "movie_id": 318,
+          "title": "The Shawshank Redemption (1994)",
+          "user_rating": 5.0,
+          "ease_contribution": 0.0509
+        }
+      ]
+    },
+    {
+      "title": "Braveheart (1995)",
+      "because_you_rated": [
+        {
+          "movie_id": 2028,
+          "title": "Saving Private Ryan (1998)",
+          "user_rating": 3.5,
+          "ease_contribution": 0.0423
+        },
+        {
+          "movie_id": 589,
+          "title": "Terminator 2: Judgment Day (1991)",
+          "user_rating": 5.0,
+          "ease_contribution": 0.0422
+        }
+      ]
+    },
+    {
+      "title": "Inglourious Basterds (2009)",
+      "because_you_rated": [
+        {
+          "movie_id": 79132,
+          "title": "Inception (2010)",
+          "user_rating": 3.5,
+          "ease_contribution": 0.035
+        },
+        {
+          "movie_id": 99114,
+          "title": "Django Unchained (2012)",
+          "user_rating": 1.0,
+          "ease_contribution": 0.0326
+        }
+      ]
+    },
+    {
+      "title": "Good Will Hunting (1997)",
+      "because_you_rated": [
+        {
+          "movie_id": 318,
+          "title": "The Shawshank Redemption (1994)",
+          "user_rating": 5.0,
+          "ease_contribution": 0.0271
+        },
+        {
+          "movie_id": 2959,
+          "title": "Fight Club (1999)",
+          "user_rating": 2.5,
+          "ease_contribution": 0.0202
+        }
+      ]
+    }
+  ]
+}

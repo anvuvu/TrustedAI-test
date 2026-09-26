@@ -379,3 +379,21 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
   (failure 16: "a classic thriller", "each film has a twist", Superbad's "before college"). New
   pattern: CF scores paraphrased as peer opinion ("loved by similar users") without a peer tool
   call (failure 17, G).
+
+## 2026-09-27 — Step 3 (analyze and write)
+
+- Frozen at commit de4c522, tagged `final-eval`. `eval offline --split test --final` ran once
+  (`eval/results/2026-09-27_offline_test`, logged in `eval/results/test_runs.log`): EASE and Blend
+  NDCG@10 0.113, UserKNN 0.107, MostPopular 0.084, TopBayesian 0.065, ContentProfile 0.009;
+  EASE − MostPopular +0.029 [0.016, 0.041]; Blend − EASE 0.000 [−0.008, 0.009].
+- Curated `chat` sessions for users 1, 15 and 30 with the six sample queries
+  (`transcripts/chat_user_*.md`, traces in `traces/examples/`). New failures seen only in these
+  long sessions: the previous query carried into the Toy Story request (user 30, turn 5, code C/U);
+  Toy Story never resolved, so no seed (user 15, turn 5, code U); an invented placeholder
+  `[[m:1107]]` (Loser) blocked by V1 (user 30, turn 1, code G, caught). Not fixed: code frozen.
+- Engine-only evidence for the report's failure cases: `eval/results/2026-09-27_failure_evidence`
+  (Toy Story seed top 5 and `why-not` for The Princess Bride and others; the dark-thriller top 5
+  with the wrong Psycho plot; `because_you_rated` with ratings 1.0 and 2.5).
+- `report-tables` now also refreshes the tables in `REPORT.md` between `<!-- table:NAME -->`
+  markers, so the report's tables are generated, never typed. Changing the reporting code after
+  the test run does not touch any metric.
