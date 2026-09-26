@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "git_commit": "13d3a3f-dirty",
+    "config_hash": "f7a8691eb63a"
+  },
+  "variants": {
+    "plain": {
+      "p_at_k": {
+        "mean": NaN,
+        "lo": NaN,
+        "hi": NaN,
+        "n": 0
+      },
+      "mean_grade": {
+        "mean": NaN,
+        "lo": NaN,
+        "hi": NaN,
+        "n": 0
+      },
+      "mean_bayes_avg": 3.9494,
+      "share_under_5_ratings": 0.0,
+      "ungraded": 50
+    },
+    "plain_min0": {
+      "p_at_k": {
+        "mean": NaN,
+        "lo": NaN,
+        "hi": NaN,
+        "n": 0
+      },
+      "mean_grade": {
+        "mean": NaN,
+        "lo": NaN,
+        "hi": NaN,
+        "n": 0
+      },
+      "mean_bayes_avg": 3.9132000000000007,
+      "share_under_5_ratings": 0.0,
+      "ungraded": 50
+    },
+    "personal_u15": {
+      "p_at_k": {
+        "mean": NaN,
+        "lo": NaN,
+        "hi": NaN,
+        "n": 0
+      },
+      "mean_grade": {
+        "mean": NaN,
+        "lo": NaN,
+        "hi": NaN,
+        "n": 0
+      },
+      "mean_bayes_avg": 3.9256,
+      "share_under_5_ratings": 0.0,
+      "ungraded": 50
+    }
+  },
+  "n_queries": 10
+}

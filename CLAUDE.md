@@ -95,14 +95,14 @@ Three steps (§13). Effort split roughly 40% build, 30% evaluate, 30% analyze an
 
 **Step 1: build** (DoD §13.1). After each module: tests, ruff, commit, note in `docs/notes.md`.
 
-- [ ] 1. Scaffolding: pyproject, `.gitignore`, config, CLI skeleton, tiny fixture
-- [ ] 2. `data.py`, `catalog.py`, `validate`
-- [ ] 3. `engines.py`, `ranking.py`
-- [ ] 4. `tools.py`
-- [ ] 5. `llm.py`, `agent.py`, `verifier.py`, `trace.py`, `prompts/system_v1.md`
-- [ ] 6. `diagnostics.py` (`why-not`)
-- [ ] 7. `evaluation/` scripts; `eval/` queries, scenarios, rubric
-- [ ] Step 1 DoD verified
+- [x] 1. Scaffolding: pyproject, `.gitignore`, config, CLI skeleton, tiny fixture (2026-09-26)
+- [x] 2. `data.py`, `catalog.py`, `validate` (2026-09-26)
+- [x] 3. `engines.py`, `ranking.py` (2026-09-26)
+- [x] 4. `tools.py` (2026-09-26)
+- [x] 5. `llm.py`, `agent.py`, `verifier.py`, `trace.py`, `prompts/system_v1.md` (2026-09-26)
+- [x] 6. `diagnostics.py` (`why-not`) (2026-09-26)
+- [x] 7. `evaluation/` scripts; `eval/` queries, scenarios, rubric (2026-09-26)
+- [x] Step 1 DoD verified (2026-09-26)
 
 **Step 2: evaluate on val** (DoD §13.2)
 
