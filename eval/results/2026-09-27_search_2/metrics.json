@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "git_commit": "aaae7cf-dirty",
+    "config_hash": "97fe50f9e101"
+  },
+  "variants": {
+    "plain": {
+      "p_at_k": {
+        "mean": 0.8400000000000001,
+        "lo": 0.72,
+        "hi": 0.9400000000000001,
+        "n": 10
+      },
+      "mean_grade": {
+        "mean": 1.32,
+        "lo": 1.0799999999999998,
+        "hi": 1.52,
+        "n": 10
+      },
+      "mean_bayes_avg": 3.6489999999999996,
+      "share_under_5_ratings": 0.26,
+      "ungraded": 0
+    },
+    "plain_min0": {
+      "p_at_k": {
+        "mean": 0.8800000000000001,
+        "lo": 0.78,
+        "hi": 0.96,
+        "n": 10
+      },
+      "mean_grade": {
+        "mean": 1.3800000000000001,
+        "lo": 1.1800000000000002,
+        "hi": 1.56,
+        "n": 10
+      },
+      "mean_bayes_avg": 3.638,
+      "share_under_5_ratings": 0.42,
+      "ungraded": 0
+    },
+    "personal_u15": {
+      "p_at_k": {
+        "mean": 0.74,
+        "lo": 0.5800000000000001,
+        "hi": 0.8800000000000001,
+        "n": 10
+      },
+      "mean_grade": {
+        "mean": 1.1400000000000001,
+        "lo": 0.9400000000000001,
+        "hi": 1.3599999999999999,
+        "n": 10
+      },
+      "mean_bayes_avg": 3.714,
+      "share_under_5_ratings": 0.16,
+      "ungraded": 0
+    }
+  },
+  "n_queries": 10
+}

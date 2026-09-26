@@ -389,6 +389,7 @@ pytest, on a tiny synthetic fixture in `tests/fixtures/tiny/`, with the LLM mock
 
 - 10 queries in `eval/search_queries.yaml`: the brief's dark-thriller query, plus tone, plot-element and setting queries.
 - Top 5 per query, graded 0/1/2 by the author in shuffled order, in `eval/search_judgments.csv`. Metrics: P@5 (grade ≥ 1) and mean grade.
+- **Deviation (Step 2, 2026-09-27):** at the author's request the grades were produced by an independent LLM grader (a fresh Claude subagent given only the guidelines, the shuffled pairs and the dataset's title, genres and plot; blind to the variant), with a rationale and failure type per pair. The report says so; an author spot-check of a random subset measures agreement (docs/notes.md).
 - Variants: with and without `min_ratings = 3`; with and without the personalization weight (for user 15).
 - Failure types are labeled for the report: keyword match with the wrong tone, sparse movies with poor plots, and so on.
 - Tags are not used as labels because of the concentration in §4.1; that analysis goes in the report.
@@ -399,7 +400,7 @@ pytest, on a tiny synthetic fixture in `tests/fixtures/tiny/`, with the LLM mock
 
 - `eval/scenarios.yaml`, about 24 scenarios: the 6 README sample queries for users 1, 15 and 30 (18), plus 6 edge cases (The Matrix absent, "Alien" ambiguous, user 30 asking about peers on a niche movie, "use your own knowledge", a 3-turn conversation where "no animation" must persist, an unknown user ID).
 - **Automatic checks per scenario:** expected tools called; verifier passed on the first try; constraints satisfied.
-- **Manual rubric** (`eval/rubric.md`), all scenarios, 0–2 each: grounded, relevant, explanation specific, honest about uncertainty.
+- **Manual rubric** (`eval/rubric.md`), all scenarios, 0–2 each: grounded, relevant, explanation specific, honest about uncertainty. Step 2 deviation: graded by an independent LLM grader against the full tool outputs, at the author's request (same process as §9.3).
 - **Reported:** tool-chain accuracy, verifier first-pass and fallback rates, constraint satisfaction, rubric means, tokens and latency per turn. Every run is saved as a transcript.
 
 ### 9.5 Honesty tests
@@ -584,7 +585,7 @@ Candidates for the report's three decisions. Status is proposed until Step 2 pro
 | D1 | Deterministic tools; the LLM only orchestrates and narrates; placeholders + verifier. **Accepted in Step 2**: every first-pass rejection in the final agent run was a real violation (typed titles); one false-positive class (V3 signs) was found and fixed; fallback 0–3% of turns | Free-form LLM answers over retrieved data | Makes R3 enforceable and failures attributable | Verifier rejects too many good answers |
 | D2 | EASE as main recommender; UserKNN kept for peer questions. **Accepted in Step 2**: EASE is the best single model on val (NDCG@10 0.102 vs UserKNN 0.081, MostPopular 0.064) | Matrix factorization; ItemKNN; UserKNN only | Closed form, deterministic, strong on MovieLens, explainable contributions; peer questions need real neighbours | UserKNN or another model beats EASE on val beyond the CI |
 | D3 | Score the whole catalog with a weighted blend of top-N rank scores (N = 200), with no sparse-user weight shift. Revised in Step 2, 2026-09-26 | Candidate generation plus learning-to-rank; the v2 draft's percentile blend; z-score or min-max blend | 5k movies is small; contributions are directly readable. The draft percentile blend lost to EASE on val (0.050 vs 0.102) because percentiles flatten EASE's head; top-200 rank scores match EASE (0.099, n.s.) and follow the query best in query mode (§5.2) | Blend does worse than EASE alone on val (the trigger fired for the draft; revised) |
-| D4 | Chunked plots, max-chunk similarity, local embedding model | Whole-plot embedding; BM25 hybrid; API embeddings | Long plots are not diluted; the matched excerpt is evidence; reproducible and free | Search grades are poor mainly because of the model |
+| D4 | Chunked plots, max-chunk similarity, local embedding model. **Accepted in Step 2**: P@5 0.84 [0.72, 0.94] (LLM-graded); failures are mostly partial plot matches and bad plot data (about 6% of plots belong to another film), not the model | Whole-plot embedding; BM25 hybrid; API embeddings | Long plots are not diluted; the matched excerpt is evidence; reproducible and free | Search grades are poor mainly because of the model |
 | D5 | Per-user temporal split, full ranking, bootstrap CIs. **Accepted** | Random split; sampled negatives | Random splits leak the future; sampled metrics can misorder models | — |
 | D6 | Lean scope (5 tools, 3 verifier rules, JSONL traces). **Accepted**: the Step 2 findings came from traces, `why-not` and the scenario checks | The v1 design (9 tools, 8 rules, trace CLI) | Brief's time budget; effort moved to analysis | — |
 | D7 | Tags not used as evaluation labels. **Accepted** | Tag weak labels for search | 45 taggers, 43% of tags from one user, list-style tags | — |
@@ -602,7 +603,7 @@ Candidates for the report's three decisions. Status is proposed until Step 2 pro
 - Sparse users make similarities unreliable.
 - Rules and the verifier reduce but cannot remove the LLM's prior knowledge; §9.5 measures how much remains.
 - The verifier's title and number checks are heuristics with some false positives and negatives.
-- One annotator for search grades and the rubric.
+- One annotator for search grades and the rubric, and in Step 2 that annotator is an LLM grader, not the author: grades can share the grader model's blind spots, and the builder chose the guidelines.
 - Movies end in 2014, so "tonight" suggestions are dated.
 
 **Open questions (answered in Step 2)**
@@ -613,3 +614,5 @@ Candidates for the report's three decisions. Status is proposed until Step 2 pro
 | Personal-mode cf vs content weight | Val NDCG@10, overall and on the sparse-user tercile |
 | Query-mode `min_ratings`: 0, 3 or 5? It trades 37% of the catalog against reliability | §9.3 variants |
 | 3 or 5 recommendations per answer | Rubric scores |
+
+Answers from Step 2 (evidence in `docs/notes.md`): λ = 500; personal weights stay cf 0.7 / content 0.2 / quality 0.1 (no significant difference to the val maximum); query-mode `min_ratings` stays 3 (dropping it is not significantly better and doubles sparse results); 3–5 recommendations stays (the rubric does not separate the two).

@@ -55,7 +55,7 @@ def run_report_tables(cfg: Config) -> Path:
         lines += _agent_table(_load(runs["agent"]), runs["agent"])
         lines += _agent_runs_table(results)
     if runs["honesty"]:
-        lines += _honesty_table(_load(runs["honesty"]), runs["honesty"].name)
+        lines += _honesty_table(_load(runs["honesty"]), runs["honesty"])
     out = results / "report_tables.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines).rstrip() + "\n")
@@ -162,10 +162,10 @@ def _agent_table(m: dict, run: Path) -> list[str]:
     return [*lines, ""]
 
 
-def _honesty_table(m: dict, run: str) -> list[str]:
+def _honesty_table(m: dict, run: Path) -> list[str]:
     f = m["fidelity"]
     lines = [
-        f"## Honesty tests — `{run}`",
+        f"## Honesty tests — `{run.name}`",
         "",
         "| Test | Result |",
         "|---|---|",
@@ -181,7 +181,34 @@ def _honesty_table(m: dict, run: str) -> list[str]:
             f"| LLM answer names the engine's top driver | {a['mentions_driver_rate']} "
             f"(n = {a['n']}) |",
         ]
+    lines += _graded_honesty_rows(run)
     return [*lines, ""]
+
+
+def _graded_honesty_rows(run: Path) -> list[str]:
+    """Rows from the hand-graded perturbation and attribution sheets, once they are filled."""
+    rows = []
+    pert, att = run / "perturbation_sheet.csv", run / "attribution_sheet.csv"
+    if pert.exists():
+        p = pd.read_csv(pert)
+        stance = p["stance_follows_data"].dropna().astype(str).str.lower()
+        if len(stance):
+            extra = p["extra_facts"].fillna("").astype(str).str.strip().str.lower()
+            rows += [
+                f"| Perturbation (graded): answer stance follows the data | "
+                f"{int((stance == 'yes').sum())} of {len(stance)} |",
+                f"| Perturbation (graded): answers adding facts beyond tool outputs | "
+                f"{int(((extra != '') & (extra != 'none')).sum())} of {len(stance)} |",
+            ]
+    if att.exists():
+        a = pd.read_csv(att)["reason_matches_driver"].dropna().astype(str).str.lower()
+        if len(a):
+            counts = ", ".join(f"{k} {int((a == k).sum())}" for k in ("yes", "partly", "no"))
+            rows.append(
+                f"| Attribution (graded): stated reason matches the top driver | "
+                f"{counts} (n = {len(a)}) |"
+            )
+    return rows
 
 
 def _figures(m: dict, out: Path) -> None:

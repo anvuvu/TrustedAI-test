@@ -289,3 +289,68 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
   unreliable to fix by prompt: 4/6 vs 1/6 in identical runs); (b) per-tool fallback templates;
   (c) embed plots without the title in the chunk prefix (title-word leakage in search), to decide
   after grading.
+
+### Grading by an LLM grader (protocol deviation, 2026-09-27)
+
+- The author asked Claude to do the hand grading. Design §9.3/§9.4 pre-registered author grades,
+  so this is a deviation, recorded in design §9.3, §9.4 and §15 and to be stated in the report.
+- Process, to limit builder bias: two fresh Claude subagents that did not build the system, one
+  for search (79 shuffled pairs, variant hidden, judged only from the dataset's title, year,
+  genres and full plot, not from memory of the films) and one for the rubric (29 turns, graded
+  against the full tool outputs from the traces) plus the perturbation and attribution sheets.
+  Every grade has a written rationale; search grades below 2 carry a failure type. Grading
+  packets and raw grader outputs are saved under `eval/grading/`.
+- Recommended before Step 3: the author regrades a random subset (e.g. 20 search pairs and 6
+  rubric turns) so the report can quote agreement with the LLM grader.
+
+### Graded results (LLM grader, see the deviation above)
+
+- **Search** (`eval/results/2026-09-27_search_2`, 10 queries, 79 graded pairs): P@5 plain 0.84
+  [0.72, 0.94], without `min_ratings` 0.88 [0.78, 0.96], personalized for user 15 0.74
+  [0.58, 0.88]; mean grade 1.32 / 1.38 / 1.14. The CIs overlap: no variant is significantly better.
+  Failure types of the 47 grades below 2: partial_element 25, genre_only 8, other 7, title_word 4,
+  wrong_tone 3. Concrete plot queries do best (war romance 1.57, heist 1.50); space survival (0.70:
+  space operas with battle damage instead of an accident) and the mood query "bleak loneliness"
+  (0.75) do worst. Personalization lowers relevance a little (n.s.): cf pulls in the user's
+  favourites that fit the query less.
+- **Open question answered:** query-mode `min_ratings` stays 3. Dropping it is not significantly
+  better (0.88 vs 0.84) and raises the share of results with < 5 ratings from 26% to 42%.
+- **D4 accepted:** the search failures are mostly about what plots contain (events, not tone;
+  partial elements) and about bad plot data, not the embedding model; title-word leakage explains
+  only 4 of 47. Proposal (c), dropping the title from the chunk prefix, is not worth a re-embed.
+- **Rubric** (`eval/results/2026-09-27_agent_3`, 29 turns): grounded 1.45, relevant 1.86, specific
+  1.66, honest 1.45; 10 turns have a 0 (3 grounded only, 5 honest only, 2 both). Rationales in
+  `eval/grading/rubric_grades_with_rationale.csv`.
+- **Perturbation (graded):** stance follows the data 6 of 6; 0 answers add facts beyond the tools.
+- **Attribution (graded):** the stated reason matches the engine's top driver: yes 5, partly 4, no 1
+  (the "no" is a fallback answer that gives no reason). The "partly" answers lead with the peer
+  average and mention the driver movie second.
+
+### Failures found by the grading (continuing the numbering)
+
+12. **D (data): about 6% of plots belong to another film.** Seeded audit of 100 plots (the 50 most
+    rated + 50 random; `eval/grading/plot_audit.csv`): 6 mismatches, 95% Wilson CI [2.8%, 12.5%],
+    a lower bound. Seven (1995) carries The Land Before Time III, Independence Day carries Day Watch,
+    Twelve Monkeys carries Mighty Aphrodite, Men in Black carries Against Her Will: An Incident in
+    Baltimore, Wild Reeds carries La Cité de la peur, Evil Dead II carries Red's Dream; the search
+    grading found Psycho (1960) too. The names quoted by the auditor were checked in the plot text.
+    Consequence: the system is **grounded but wrong** for these movies (`find_movie` excerpts,
+    `explain` plot passages and content similarity all describe another film). `Exam/` is
+    read-only, so this is a reported limitation; a mitigation would flag plots whose vectors are
+    far from those of the movie's CF neighbours. This is the one place where outside knowledge was
+    used, and only to audit the data.
+13. **Confidence gap (design §6.1).** Item confidence is low only for `no_cf_signal` or
+    `sparse_user`, so a query-mode pick with 4 ratings, mean 2.12 and nothing but the query signal
+    (Darkness Falls) is labelled `high`, and the answer presents it without a hedge. Most rubric
+    "honest = 0" scores trace to this rule, not to the LLM hiding a flag. Fix: item confidence also
+    low when `n_ratings < movie_low_below`.
+14. **C (state), confirmed in the trace.** `no_animation_persists_u15` turns 2 and 3 called
+    `recommend` with `exclude_genres=[]`; turn 2's result contained Toy Story 3 (Animation) and the
+    LLM happened not to pick it. Constraint satisfaction 1.0 is luck, not enforcement. Fix: the
+    orchestrator persists excluded genres (proposal a).
+15. **G / R: "because you rated X" is read as "liked".** EASE is fitted on binary interactions, so a
+    movie the user rated 1.0 or 2.0 can be the top driver, and answers call it a movie they liked.
+    Fix options: only list history movies rated at or above the user's mean as reasons, or fit EASE
+    on liked-only interactions (a val ablation).
+16. **G: outside knowledge in adjectives** ("a classic thriller with a strong plot", "classic
+    madcap"). V1–V3 cannot catch it (no number, no title); only the rubric measures it.

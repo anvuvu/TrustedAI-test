@@ -1,0 +1,11 @@
+row,user_id,movie_id,reason_matches_driver,rationale
+1,51,296,yes,"Leads with the CF link to The Silence of the Lambs (rated 5.0), the engine's top driver; the plot, quality and peer reasons follow as secondary."
+2,52,4011,partly,"Leads with the 8-user peer statistic; Hot Fuzz (the CF driver) comes second, lumped with American Gangster and mislabelled as a plot/theme match rather than the collaborative-filtering link."
+3,56,367,partly,"Opens with peer ratings ('rated it well', though peers averaged 3.17, 0.17 below their norm) and the Fugitive plot match; The Lion King is correctly called a strong influence, but only as the third, 'additionally' reason."
+4,77,1291,yes,"The main reason is Raiders of the Lost Ark (rated 5.0) through collaborative filtering and content, exactly the top driver."
+5,111,318,partly,"Leads with the peer average of 4.35; Forrest Gump, the CF top driver, is mentioned second, as only 'partly' the reason."
+6,119,4011,partly,Leads with the peer average; American History X is named as a strong influence but bundled with Red (the content driver) and described as a plot/theme match rather than CF.
+7,224,1196,yes,"The main reason is the CF link to Star Wars: Episode IV, the top driver, but it does not say the user rated that movie 2.0, and 'predecessor' is not in the tool output."
+8,245,296,no,The verifier fallback gave no reason at all.
+9,254,50,yes,"Leads with CF through The Shawshank Redemption, the top driver; the genre, peer and Fugitive plot reasons are secondary."
+10,257,6,yes,"The main reason is Casino (1995), which is both the CF and the content driver; it also discloses the low confidence."
