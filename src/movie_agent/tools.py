@@ -507,7 +507,7 @@ class Toolbox:
                 {
                     "signal": signal,
                     "contribution": round(float(value), 3),
-                    "percentile": round(float(ranking.features[signal][pos]), 2),
+                    "feature_score": round(float(ranking.features[signal][pos]), 2),
                     "via_history_movie": via,
                 }
             )

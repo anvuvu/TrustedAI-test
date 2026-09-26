@@ -37,7 +37,7 @@ addopts = "-q"
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = ["Exam", "*.md"]  # never reformat docs or the handout
+extend-exclude = ["Exam", "*.md", "eval/results"]  # never reformat docs, the handout or saved results
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]

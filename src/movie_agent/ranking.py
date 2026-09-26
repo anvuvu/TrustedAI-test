@@ -12,7 +12,6 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel, Field
-from scipy.stats import rankdata
 
 from movie_agent.catalog import Catalog
 from movie_agent.config import Config
@@ -69,9 +68,9 @@ class RankedItem(BaseModel):
     year: int
     genres: list[str]
     rank: int
-    score: float  # weighted blend of percentile features, in [0, 1]
-    contributions: dict[str, float]  # feature -> weight * percentile / total weight
-    features: dict[str, float]  # feature -> percentile among eligible movies, in [0, 1]
+    score: float  # weighted blend of feature scores, in [0, 1]
+    contributions: dict[str, float]  # feature -> weight * feature score / total weight
+    features: dict[str, float]  # feature -> top-N rank score among eligible movies, in [0, 1]
     flags: list[str]
     confidence: Literal["high", "low"]
     because_you_rated: list[Reason]
@@ -101,7 +100,7 @@ class Ranking:
     removed_by: np.ndarray  # filter name per movie, "" if eligible
     filter_counts: dict[str, int]
     order: np.ndarray  # positions of eligible movies, best first
-    features: dict[str, np.ndarray]  # percentiles, NaN for ineligible movies
+    features: dict[str, np.ndarray]  # top-N rank scores, NaN for ineligible movies
     contributions: dict[str, np.ndarray]
     score: np.ndarray  # NaN for ineligible movies
     weights: dict[str, float]
@@ -120,11 +119,16 @@ class Ranking:
         return [int(self.movie_ids[p]) for p in self.order[:k]]
 
 
-def percentile(values: np.ndarray) -> np.ndarray:
-    """Mid-rank percentile in (0, 1): share of values below, counting ties as half."""
-    if len(values) == 0:
-        return values.astype(np.float64)
-    return (rankdata(values, method="average") - 0.5) / len(values)
+def top_n_score(values: np.ndarray, n: int) -> np.ndarray:
+    """Rank score in [0, 1]: 1 for the best value, falling linearly to 1/n at rank n, 0 below.
+
+    Unlike a percentile over the whole catalog, this keeps the head of a feature spread out
+    (design §5.2). Ties are broken by position (catalog order), so results are deterministic.
+    """
+    out = np.zeros(len(values), dtype=np.float64)
+    top = np.argsort(-values, kind="stable")[:n]
+    out[top] = 1.0 - np.arange(len(top)) / n
+    return out
 
 
 def canonical_genres(names: list[str], movies: pd.DataFrame) -> list[str]:
@@ -196,16 +200,16 @@ class Ranker:
         eligible = removed == ""
 
         raw, best_chunk, has_profile = self._raw_features(req, history)
-        w, sparse_user = self._weights(mode, len(history), weights, has_profile)
+        w = self._weights(mode, weights, has_profile)
+        sparse_user = len(history) < self.cfg.ranking.sparse_user_threshold
         no_cf = ~self.ease.has_signal
         feats: dict[str, np.ndarray] = {}
         for name in w:
-            pct = np.full(len(self.movie_ids), np.nan)
+            feat = np.full(len(self.movie_ids), np.nan)
+            feat[eligible] = 0.0  # movies without CF signal never enter the cf top N
             scored = eligible & ~no_cf if name == "cf" else eligible
-            pct[scored] = percentile(raw[name][scored])
-            if name == "cf":
-                pct[eligible & no_cf] = 0.5
-            feats[name] = pct
+            feat[scored] = top_n_score(raw[name][scored], self.cfg.ranking.top_n)
+            feats[name] = feat
         total = sum(w.values())
         contributions = {name: w[name] * feats[name] / total for name in w}
         score = np.sum(list(contributions.values()), axis=0)
@@ -272,9 +276,13 @@ class Ranker:
         return raw, best_chunk, profile is not None
 
     def _weights(
-        self, mode: Mode, n_history: int, override: dict[str, float] | None, has_profile: bool
-    ) -> tuple[dict[str, float], bool]:
-        """Mode weights with the sparse-user adjustment; zero weights are dropped."""
+        self, mode: Mode, override: dict[str, float] | None, has_profile: bool
+    ) -> dict[str, float]:
+        """Mode weights (or `override`); `content` is dropped without a profile, zeros dropped.
+
+        Sparse users keep the same weights: shifting cf weight to content and quality hurt
+        them on val (design §5.2, decision D3).
+        """
         cfg = self.cfg.ranking
         if override is not None:
             w = dict(override)
@@ -282,15 +290,9 @@ class Ranker:
             w = {**cfg.weights["query"], "seed": cfg.seed_weight_with_query}
         else:
             w = dict(cfg.weights[mode])
-        sparse_user = n_history < cfg.sparse_user_threshold and "cf" in w
-        if sparse_user:
-            moved = w["cf"] * (1 - n_history / cfg.sparse_user_threshold)
-            w["cf"] -= moved
-            w["content"] = w.get("content", 0.0) + moved / 2
-            w["quality"] = w.get("quality", 0.0) + moved / 2
         if not has_profile:
             w.pop("content", None)
-        return {k: v for k, v in w.items() if v > 0}, sparse_user
+        return {k: v for k, v in w.items() if v > 0}
 
     def _embed(self, query: str) -> np.ndarray:
         if query not in self._query_cache:

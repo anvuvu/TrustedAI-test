@@ -3,11 +3,14 @@
 import numpy as np
 import pytest
 
-from movie_agent.ranking import RecommendRequest, build_ranker, percentile
+from movie_agent.ranking import RecommendRequest, build_ranker, top_n_score
 
 
-def test_percentile_mid_rank():
-    assert np.allclose(percentile(np.array([1.0, 2.0, 2.0, 3.0])), [0.125, 0.5, 0.5, 0.875])
+def test_top_n_score_decays_linearly_inside_the_top_n():
+    values = np.array([0.1, 0.9, 0.5, 0.5, 0.3])
+    # ranks: 0.9 -> 1, first 0.5 -> 2, second 0.5 -> 3 (ties by position), rest outside top 3
+    assert np.allclose(top_n_score(values, 3), [0.0, 1.0, 2 / 3, 1 / 3, 0.0])
+    assert np.allclose(top_n_score(values, 10), [0.6, 1.0, 0.9, 0.8, 0.7])
 
 
 def test_i2_recommend_never_violates_filters(ranker):
@@ -62,19 +65,16 @@ def test_modes_and_weights(ranker):
     assert both.mode == "query+seed" and "seed" in both.weights and "query" in both.weights
 
 
-def test_sparse_user_adjustment_moves_cf_weight(ranker):
+def test_sparse_user_is_flagged_but_keeps_the_mode_weights(ranker):
     ranking = ranker.rank(RecommendRequest(user_id=1))  # 7 ratings < threshold 30
-    base = ranker.cfg.ranking.weights["personal"]
-    moved = base["cf"] * (1 - 7 / 30)
     assert ranking.sparse_user
-    assert abs(ranking.weights["cf"] - (base["cf"] - moved)) < 1e-12
-    assert abs(ranking.weights["quality"] - (base["quality"] + moved / 2)) < 1e-12
+    assert ranking.weights == ranker.cfg.ranking.weights["personal"]
 
 
-def test_no_cf_signal_movie_gets_neutral_cf(ranker):
+def test_no_cf_signal_movie_gets_no_cf_score(ranker):
     ranking = ranker.rank(RecommendRequest(user_id=1))
     pos = int(np.searchsorted(ranking.movie_ids, 14))
-    assert ranking.no_cf_signal[pos] and ranking.features["cf"][pos] == 0.5
+    assert ranking.no_cf_signal[pos] and ranking.features["cf"][pos] == 0.0
 
 
 def test_seeds_are_not_recommended_and_few_candidates_warns(ranker):

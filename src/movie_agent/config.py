@@ -77,6 +77,7 @@ class ContentConfig(_Section):
 
 
 class RankingConfig(_Section):
+    top_n: int
     sparse_user_threshold: int
     query_min_ratings: int
     seed_weight_with_query: float

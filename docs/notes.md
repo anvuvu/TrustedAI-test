@@ -176,3 +176,25 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
 - Every §12 command runs: `validate`, `chat`, `why-not`, `eval offline --split val` (test refused
   without `--final`, not run), `eval search`, `eval agent`, `eval honesty`, `report-tables`.
 - Assumptions: listed above.
+
+## 2026-09-26 — Step 2 (evaluate on val)
+
+### Ranking: why Blend lost to EASE (`eval/results/2026-09-26_blend_diagnosis`)
+
+- Diagnosis on val (scripts saved in the results directory). Personal-mode NDCG@10:
+  EASE 0.102; Blend as deployed 0.050; without the sparse-user shift 0.057; cf 1.0 alone 0.102
+  (sanity: equals EASE); cf .9 + quality .1: 0.100 (n.s.); cf .8 + content .2: 0.061.
+- Confirmed: percentiles flatten EASE's head (user 1: raw 0.52 at rank 1 -> 0.12 at rank 200;
+  percentile 0.9999 -> 0.960), so the content feature reorders the best CF candidates. The
+  sparse-user shift hurt sparse users (0.059 vs 0.076 without it), refuting the pre-registered
+  expectation that content helps them.
+- Normalizations without the shift: z-score 0.102, top-200 rank 0.099, min-max 0.098; query
+  adherence@5 (top 5 within the 50 best plot matches, user 15, 10 judged queries): percentile 0.46,
+  z-score 0.42 (EASE's heavy tail lets cf override the query), min-max 0.68, top-200 0.88.
+- **Decision (author, 2026-09-26): top-200 rank scores, no sparse-user weight shift** (design §5.2,
+  D3 revised). The `sparse_user` flag stays for confidence. `no_cf_signal` movies now get cf = 0.
+- UserKNN as a recommender switched to the unnormalized sum (implementation choice left open by
+  §5.1): 0.004 -> 0.081 in the diagnosis. `peer_opinion` is unaffected.
+- Deviation: the diagnosis tried 11 variants on val; val is the tuning split, the test split is
+  untouched. The chosen variant is not the val maximum (z-score) but the one that also behaves in
+  query mode, so the val number is not cherry-picked upward.

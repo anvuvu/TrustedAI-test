@@ -49,7 +49,8 @@ content:
   excerpt_chars: 300
 
 ranking:
-  sparse_user_threshold: 30
+  top_n: 200                 # feature score = 1 - (rank - 1) / N inside its top N, else 0
+  sparse_user_threshold: 30 # below this many ratings: flagged low confidence (weights unchanged)
   query_min_ratings: 3
   seed_weight_with_query: 0.3
   weights:

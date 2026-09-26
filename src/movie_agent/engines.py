@@ -159,7 +159,10 @@ class UserKNN:
     def score_all(self) -> tuple[np.ndarray, np.ndarray]:
         """UserKNN-as-recommender scores for every fitted user (used by offline evaluation).
 
-        score(u, i) = sum_v s_uv * centred_vi / sum_v |s_uv| over neighbours v who rated i.
+        score(u, i) = sum_v s_uv * centred_vi over the neighbours v who rated i. The
+        unnormalized top-N form rewards movies that many similar users liked; dividing by
+        sum |s_uv| (the rating-prediction form) favoured movies rated by just two neighbours
+        and scored NDCG@10 0.004 on val (docs/notes.md, Step 2).
         Output: (scores users x movies, NaN where support < min_support; support counts).
         """
         weights = np.zeros_like(self.similarity)
@@ -167,12 +170,8 @@ class UserKNN:
             for n in self.neighbours(int(user_id)):
                 weights[row, self.row_of(n.user_id)] = n.similarity
         w = sparse.csr_matrix(weights)
-        numerator = (w @ self.centred).toarray()
-        denominator = (abs(w) @ self.mask).toarray()
+        scores = (w @ self.centred).toarray()
         support = ((w > 0).astype(float) @ self.mask).toarray()
-        scores = np.divide(
-            numerator, denominator, out=np.full_like(numerator, np.nan), where=denominator > 0
-        )
         scores[support < self.cfg.min_support] = np.nan
         return scores, support
 

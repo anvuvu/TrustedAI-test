@@ -184,13 +184,13 @@ Every unseen movie that passes the filters is scored; there is no candidate stag
 
 | Feature | Meaning |
 |---|---|
-| `cf` | EASE score from the user's history (plus seeds in seed mode). Movies with no train ratings get the neutral value 0.5 and the flag `no_cf_signal` |
+| `cf` | EASE score from the user's history (plus seeds in seed mode). Movies with no train ratings are never in the cf top N, so their cf score is 0; they carry the flag `no_cf_signal` |
 | `content` | Cosine to the user content profile |
 | `query` | Max-chunk similarity to the query (query mode) |
 | `seed` | Max cosine to the seed movies (seed mode) |
 | `quality` | Bayesian average |
 
-Each feature is converted to a percentile rank among the eligible movies, in [0, 1]. The score is `Σ w_f · f / Σ w_f`, and each feature's contribution is `w_f · f / Σ w_f`, so contributions sum exactly to the score.
+Each feature is converted to a **top-N rank score** among the eligible movies: 1 for the best movie on that feature, falling linearly to 1/N at rank N, and 0 below (N = 200, config `ranking.top_n`; ties by movieId). The score is `Σ w_f · f / Σ w_f`, and each feature's contribution is `w_f · f / Σ w_f`, so contributions sum exactly to the score and stay in [0, 1].
 
 | Mode | Triggered by | Weights (config) |
 |---|---|---|
@@ -198,7 +198,14 @@ Each feature is converted to a percentile rank among the eligible movies, in [0,
 | query | a query | query 0.6, cf 0.2, quality 0.2; default `min_ratings = 3` |
 | seed | seed movies | seed 0.5, cf 0.3, quality 0.2 |
 
-Query plus seeds uses the query weights with `seed` added at 0.3 (renormalized). The personal-mode cf/content split is tuned on val; the other weights are hand-set and justified in §14. For users with fewer than 30 ratings, the cf weight is scaled by n/30 and the difference moves to content and quality, flagged `sparse_user`.
+Query plus seeds uses the query weights with `seed` added at 0.3 (renormalized). The personal-mode cf/content split is tuned on val; the other weights are hand-set and justified in §14. Users with fewer than 30 ratings are flagged `sparse_user` (low confidence, §6.1); their weights are not changed.
+
+**Why top-N rank scores and no sparse-user shift** (revised in Step 2, decision D3; evidence in `eval/results/2026-09-26_blend_diagnosis`). The v2 draft used percentile ranks over the whole catalog and moved cf weight to content and quality for sparse users. On val that blend lost to EASE alone (NDCG@10 0.050 vs 0.102, paired difference −0.052 [−0.068, −0.036]). Two causes:
+
+- Percentiles flatten the head: for user 1, EASE scores fall fourfold from rank 1 to rank 200 (0.52 → 0.12), but their percentiles only from 0.9999 to 0.960, so small content differences reorder the best CF candidates.
+- The sparse-user shift hurt the users it was meant to help (NDCG@10 on users with < 30 train ratings: 0.059 with it, 0.076 without).
+
+With top-200 rank scores and no shift, the blend is at 0.099, with no significant difference from EASE (−0.003 [−0.016, 0.008]). In query mode it keeps 88% of the top 5 among the 50 best plot matches, against 46% for percentiles. z-score normalization matched EASE in personal mode (0.102), but EASE's heavy-tailed scores then dominated query mode (42%).
 
 The query-mode `min_ratings = 3` default is the brief's "quality filter", but it removes 37% of the catalog. That trade-off is measured in §9.3 and discussed in §15.
 
@@ -462,6 +469,7 @@ user_knn: {k: 50, min_common: 5, gamma: 50}
 ease: {lambda: 500, lambda_grid: [100, 300, 500, 1000]}
 content: {model: BAAI/bge-small-en-v1.5, chunk_tokens: 300, chunk_overlap: 50}
 ranking:
+  top_n: 200
   sparse_user_threshold: 30
   query_min_ratings: 3
   weights:
@@ -575,7 +583,7 @@ Candidates for the report's three decisions. Status is proposed until Step 2 pro
 |---|---|---|---|---|
 | D1 | Deterministic tools; the LLM only orchestrates and narrates; placeholders + verifier | Free-form LLM answers over retrieved data | Makes R3 enforceable and failures attributable | Verifier rejects too many good answers |
 | D2 | EASE as main recommender; UserKNN kept for peer questions | Matrix factorization; ItemKNN; UserKNN only | Closed form, deterministic, strong on MovieLens, explainable contributions; peer questions need real neighbours | UserKNN or another model beats EASE on val beyond the CI |
-| D3 | Score the whole catalog with a weighted percentile blend | Candidate generation plus learning-to-rank | 5k movies is small; contributions are directly readable | Blend does worse than EASE alone on val |
+| D3 | Score the whole catalog with a weighted blend of top-N rank scores (N = 200), with no sparse-user weight shift. Revised in Step 2, 2026-09-26 | Candidate generation plus learning-to-rank; the v2 draft's percentile blend; z-score or min-max blend | 5k movies is small; contributions are directly readable. The draft percentile blend lost to EASE on val (0.050 vs 0.102) because percentiles flatten EASE's head; top-200 rank scores match EASE (0.099, n.s.) and follow the query best in query mode (§5.2) | Blend does worse than EASE alone on val (the trigger fired for the draft; revised) |
 | D4 | Chunked plots, max-chunk similarity, local embedding model | Whole-plot embedding; BM25 hybrid; API embeddings | Long plots are not diluted; the matched excerpt is evidence; reproducible and free | Search grades are poor mainly because of the model |
 | D5 | Per-user temporal split, full ranking, bootstrap CIs | Random split; sampled negatives | Random splits leak the future; sampled metrics can misorder models | — |
 | D6 | Lean scope (5 tools, 3 verifier rules, JSONL traces) | The v1 design (9 tools, 8 rules, trace CLI) | Brief's time budget; effort moved to analysis | — |

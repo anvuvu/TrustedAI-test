@@ -61,3 +61,17 @@ def test_content_index_query_profile_and_cache(ds, cfg):
     assert index.profile({1: 2.0}, liked_abs=4.0) is None
     again = build_content_index(*args)  # loaded from cache
     assert np.array_equal(again.chunk_vecs, index.chunk_vecs)
+
+
+def test_user_knn_recommender_is_the_unnormalized_neighbour_sum(ds, cfg):
+    knn = UserKNN(ds.movies.index.to_numpy(), cfg.user_knn).fit(ds.ratings)
+    scores, support = knn.score_all()
+    row, col = knn.row_of(1), int(np.searchsorted(knn.movie_ids, 12))
+    raters = [(n, knn.rating(n.user_id, 12)) for n in knn.neighbours(1)]
+    raters = [(n, r) for n, r in raters if r is not None]
+    expected = sum(n.similarity * (r - knn.user_mean(n.user_id)) for n, r in raters)
+    assert support[row, col] == len(raters)
+    if len(raters) >= cfg.user_knn.min_support:
+        assert abs(scores[row, col] - expected) < 1e-9
+    else:
+        assert np.isnan(scores[row, col])
