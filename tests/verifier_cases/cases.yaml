@@ -1,0 +1,68 @@
+# Crafted answers for the verifier self-test (I5). Context for every case:
+#   movies seen in tool results this session: 2, 4, 5, 10, 15
+#   recommended by `recommend` in this or the previous turn: 4, 10
+#   the user has rated: 2, 5, 15
+#   active excluded genres: Horror
+#   numbers in recent tool outputs: 4.25, 12, 0.46, 3.9, 7
+bad:
+  - id: bare_title
+    answer: "You might enjoy The Usual Suspects, which similar users rated 4.25."
+    recommended: [10]
+    rule: V1
+  - id: bare_title_lowercase
+    answer: "Try [[m:4]]. It is darker than pulp fiction."
+    recommended: [4]
+    rule: V1
+  - id: invented_placeholder
+    answer: "Try [[m:9]]."
+    recommended: []
+    rule: V1
+  - id: unknown_movie_id
+    answer: "Try [[m:424242]]."
+    recommended: []
+    rule: V1
+  - id: not_from_recommend
+    answer: "Try [[m:5]]."
+    recommended: [5]
+    rule: V2
+  - id: already_seen
+    answer: "Watch [[m:2]] again."
+    recommended: [2]
+    rule: V2
+  - id: excluded_genre
+    answer: "Try [[m:4]] and [[m:10]]."
+    recommended: [4, 10]
+    exclude_genres: [Thriller]
+    rule: V2
+  - id: wrong_rating
+    answer: "Similar users rated [[m:10]] 4.8 on average."
+    recommended: [10]
+    rule: V3
+  - id: wrong_count
+    answer: "13 similar users rated [[m:10]]."
+    recommended: [10]
+    rule: V3
+  - id: wrong_percentage
+    answer: "[[m:10]] was liked by 60% of similar users."
+    recommended: [10]
+    rule: V3
+  - id: invented_count_with_separator
+    answer: "[[m:4]] has 1,203 ratings."
+    recommended: [4]
+    rule: V3
+good:
+  - id: grounded_recommendation
+    answer: "1. [[m:10]] — 12 similar users rated it 4.25 on average (46% liked it).\n2. [[m:4]] — a 3.9 Bayesian average."
+    recommended: [10, 4]
+  - id: rounded_values
+    answer: "Similar users rated [[m:10]] about 4.3; 46% of them liked it."
+    recommended: [10]
+  - id: years_and_ordinals_are_ignored
+    answer: "1. [[m:4]] is from 1995, and [[m:10]] also came out in 1995."
+    recommended: [4, 10]
+  - id: history_movies_can_be_mentioned
+    answer: "Because you rated [[m:2]] and [[m:15]] highly, try [[m:10]]."
+    recommended: [10]
+  - id: no_recommendation
+    answer: "The dataset does not contain that movie. Could you describe what you want instead?"
+    recommended: []
