@@ -134,3 +134,20 @@ def test_report_tables_from_saved_results(cfg, ds, embedder):
     text = out.read_text()
     assert "## Offline ranking" in text and "## Honesty tests" in text
     assert (cfg.paths.results_dir / "figures" / "accuracy_by_system.png").exists()
+
+
+def test_search_score_is_nan_not_zero_when_ungraded(cfg):
+    from movie_agent.evaluation.search import score
+
+    results = pd.DataFrame(
+        {
+            "variant": ["v"] * 2,
+            "query_id": ["q"] * 2,
+            "movie_id": [1, 2],
+            "bayes_avg": [3.0, 3.0],
+            "n_ratings": [5, 5],
+        }
+    )
+    judgments = pd.DataFrame({"query_id": ["q", "q"], "movie_id": [1, 2], "grade": [None, None]})
+    out = score(results, judgments, cfg)["v"]
+    assert np.isnan(out["p_at_k"]["mean"]) and out["ungraded"] == 2

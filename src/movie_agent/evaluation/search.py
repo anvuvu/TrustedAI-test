@@ -98,16 +98,22 @@ def score(results: pd.DataFrame, judgments: pd.DataFrame, cfg: Config) -> dict:
     out = {}
     for name, g in graded.groupby("variant", sort=False):
         per_query = g.groupby("query_id").agg(
-            p_at_k=("grade", lambda s: float((s >= 1).mean())), mean_grade=("grade", "mean")
+            p_at_k=("grade", _precision), mean_grade=("grade", "mean")
         )
         out[name] = {
-            "p_at_k": bootstrap_ci(per_query["p_at_k"], cfg, rng),
-            "mean_grade": bootstrap_ci(per_query["mean_grade"], cfg, rng),
+            "p_at_k": bootstrap_ci(per_query["p_at_k"].dropna(), cfg, rng),
+            "mean_grade": bootstrap_ci(per_query["mean_grade"].dropna(), cfg, rng),
             "mean_bayes_avg": float(g["bayes_avg"].mean()),
             "share_under_5_ratings": float((g["n_ratings"] < 5).mean()),
             "ungraded": int(g["grade"].isna().sum()),
         }
     return out
+
+
+def _precision(grades: pd.Series) -> float:
+    """Share of graded results with grade >= 1; NaN when nothing is graded yet."""
+    graded = grades.dropna()
+    return float((graded >= 1).mean()) if len(graded) else float("nan")
 
 
 def run_search(
