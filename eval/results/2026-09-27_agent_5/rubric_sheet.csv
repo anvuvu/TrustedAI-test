@@ -1,0 +1,94 @@
+scenario,turn,user,answer,grounded,relevant,specific,honest
+tonight_u1,1,What should I watch tonight?,"Here are some movies you might enjoy tonight:
+
+1. **Snatch (2000)** - A comedy crime thriller highly recommended based on your love for intense crime dramas.
+2. **The Shawshank Redemption (1994)** - A classic crime drama with strong ratings and similar themes to movies you've liked.
+3. **The Godfather (1972)** - Another crime drama with high peer ratings and connections to your favorite films.
+4. **The Godfather: Part II (1974)** - The sequel to the above, continuing the crime drama story with high acclaim.
+5. **Terminator 2: Judgment Day (1991)** - An action sci-fi film recommended due to your interest in thrilling and well-rated movies.
+
+Would you like me to explain why you might like any of these?",,,,
+dark_thriller_u1,1,I want a dark psychological thriller with a twist,"Here are some dark psychological thrillers with a twist that you might like:
+
+- **Donnie Darko (2001)**: Highly rated and recommended because you liked **Reservoir Dogs (1992)** and **Fight Club (1999)**.
+- **Memento (2000)**: Strongly recommended with a backward sequence plot, liked by users who rated **Fight Club (1999)** and **American History X (1998)** highly.
+- **Dark City (1998)**: A thriller with amnesia and mystery elements, recommended because you liked **Alien (1979)** and **Office Space (1999)**.
+- **Twelve Monkeys (a.k.a. 12 Monkeys) (1995)**: A sci-fi thriller with a mysterious plot, recommended because you liked **Independence Day (a.k.a. ID4) (1996)** and **Mission: Impossible (1996)**.
+- **Darkness Falls (2003)**: A thriller with a supernatural element, but with low confidence due to few ratings.
+
+Would you like me to explain why you might like any of these movies?",,,,
+peers_pulp_fiction_u1,1,What do people with similar taste to mine think about Pulp Fiction?,"People with similar taste to you have rated **Pulp Fiction (1994)** quite highly, with an average rating of 4.33, which is 0.83 above their own average ratings. About 85.4% of them liked it. You rated it 3.0 yourself. Would you like me to recommend movies similar to **Pulp Fiction (1994)** or explain why similar users liked it?",,,,
+why_that_u1,1,Recommend one movie for tonight.,"I recommend watching **Snatch (2000)**. It is a Comedy, Crime, and Thriller movie highly rated by users with similar tastes to yours, especially since you liked **American History X (1998)** and **Reservoir Dogs (1992)**.",,,,
+why_that_u1,2,Why do you think I'd like that?,"I think you'd like **Snatch (2000)** because it is highly rated by 22 users with similar tastes to you, who gave it an average rating of 4.18, which is 0.71 above their own average. The recommendation is driven mostly by collaborative filtering from your high ratings of movies like **American History X (1998)** and **Reservoir Dogs (1992)**. It also has a strong plot similarity to movies you rated highly, such as **Go (1999)**. The movie is a mix of Comedy, Crime, and Thriller genres, which you have rated before, though with a slight negative affinity. Would you like me to recommend another movie?",,,,
+toy_story_no_animation_u1,1,I liked Toy Story but I'm tired of animated movies — what else?,"Since you liked **Toy Story (1995)** but want to avoid animated movies, here are some recommendations for you:
+
+- **Gremlins (1984)**: A comedy-horror film with a high confidence recommendation, related to your interest in adventure and fun.
+- **Babe (1995)**: A children drama with strong collaborative filtering signals from your ratings.
+- **Snatch (2000)**: A comedy crime thriller with high ratings and strong collaborative filtering support.
+- **The Santa Clause (1994)**: A comedy drama fantasy film, recommended based on your similar movie ratings.
+- **Santa Claus: The Movie (1985)**: An adventure children fantasy movie, though with low confidence due to few ratings.
+
+Would you like me to explain why you might like any of these?",,,,
+blind_spot_u1,1,What's my blind spot? What genres am I missing?,"Your blind spot is the Documentary genre, which you have not rated at all. You also tend to avoid Horror, rating it much lower than your average. You have rated many movies in genres like Action, Adventure, Comedy, and Drama, but Documentary remains unexplored for you.",,,,
+tonight_u15,1,What should I watch tonight?,"Here are some movies you might enjoy tonight:
+
+1. **Blade Runner (1982)** - Recommended because you liked **Alien (1979)** and **Star Wars: Episode V - The Empire Strikes Back (1980)**. It's a high-confidence pick blending action, sci-fi, and thriller.
+2. **The Silence of the Lambs (1991)** - A crime thriller recommended based on your liking of **Pulp Fiction (1994)** and **The Shawshank Redemption (1994)**.
+3. **Braveheart (1995)** - An action drama war movie, recommended because you liked **Saving Private Ryan (1998)** and **Terminator 2: Judgment Day (1991)**.
+4. **Inglourious Basterds (2009)** - Another action drama war film, recommended due to your ratings of **Inception (2010)** and **Django Unchained (2012)**.
+5. **Good Will Hunting (1997)** - A drama romance movie, recommended because you liked **The Shawshank Redemption (1994)** and **Fight Club (1999)**.
+
+Would you like me to explain why you might like any of these?",,,,
+dark_thriller_u15,1,I want a dark psychological thriller with a twist,"Here are some dark psychological thrillers with a twist you might like:
+
+- **Donnie Darko (2001)** is highly rated and recommended partly because you liked **Requiem for a Dream (2000)** and **Memento (2000)**. It involves themes of time travel and detachment from reality.
+- **Psycho (1960)** is a classic thriller with a strong plot and high ratings, recommended because you liked **The Godfather (1972)** and **Back to the Future (1985)**.
+- **Twelve Monkeys (a.k.a. 12 Monkeys) (1995)** is a mystery sci-fi thriller with a good mix of quality and collaborative filtering signals, recommended because you liked **Independence Day (a.k.a. ID4) (1996)** and **Toy Story (1995)**.
+- **Darkness Falls (2003)** is a thriller with fewer ratings but matches your query well.
+- **Color of Night (1994)** is a drama thriller with a strong query match.
+
+Would you like me to explain why you might like any of these?",,,,
+peers_pulp_fiction_u15,1,What do people with similar taste to mine think about Pulp Fiction?,"People with similar taste to you have rated **Pulp Fiction (1994)** very highly, with an average rating of 4.48, which is 1.02 above their own average ratings. About 90.7% of these similar users liked it. You yourself rated it 4.0.",,,,
+why_that_u15,1,Recommend one movie for tonight.,"I recommend you watch **Blade Runner (1982)**. It is a highly rated action, sci-fi, and thriller movie that you might enjoy because you rated **Alien (1979)** and **Star Wars: Episode V - The Empire Strikes Back (1980)** highly.",,,,
+why_that_u15,2,Why do you think I'd like that?,"I recommended **Blade Runner (1982)** because you rated **Alien (1979)** and **Star Wars: Episode V - The Empire Strikes Back (1980)** highly, and it has a strong collaborative filtering score from those movies. It also has a similar plot to **Prometheus (2012)**, which you rated 3.0. The movie is well rated overall and by users similar to you, with 29 similar users rating it highly. Your affinity for the Sci-Fi genre also supports this recommendation. Would you like me to recommend more movies or explain another?",,,,
+toy_story_no_animation_u15,1,I liked Toy Story but I'm tired of animated movies — what else?,"Since you liked **Toy Story (1995)** but want to avoid animated movies, here are some recommendations for you:
+
+- **E.T. the Extra-Terrestrial (1982)**: A well-rated sci-fi drama about an extraordinary extraterrestrial encounter.
+- **Snatch (2000)**: A highly rated crime comedy thriller with strong collaborative filtering support.
+- **Toys (1992)**: A comedy fantasy movie similar in theme to toys, though with a lower average rating.
+- **Santa Claus: The Movie (1985)**: An adventure fantasy with children themes, but note it has few ratings so confidence is low.
+- **Jingle All the Way (1996)**: A children comedy movie, somewhat related to your taste but with mixed ratings.
+
+Would you like me to explain why you might like any of these?",,,,
+blind_spot_u15,1,What's my blind spot? What genres am I missing?,"Your blind spots are the genres Documentary and Film-Noir, which you have not rated at all. You also tend to avoid Animation, Children, Fantasy, and Musical genres, rating them lower than your average. Would you like me to recommend some movies from your blind spot genres or any other specific genre?",,,,
+tonight_u30,1,What should I watch tonight?,"Here are some movie recommendations for you tonight:
+
+1. **Blade Runner (1982)** - Recommended because you liked **Star Wars: Episode V - The Empire Strikes Back (1980)** and **The Terminator (1984)**.
+2. **Fight Club (1999)** - Recommended because you liked **Inception (2010)** and **The Shawshank Redemption (1994)**.
+3. **Saving Private Ryan (1998)** - Recommended because you liked **Braveheart (1995)** and **Star Wars: Episode VI - Return of the Jedi (1983)**.
+4. **Forrest Gump (1994)** - Recommended because you liked **The Shawshank Redemption (1994)** and **Braveheart (1995)**.
+5. **The Silence of the Lambs (1991)** - Recommended because you liked **The Shawshank Redemption (1994)** and **Star Wars: Episode IV - A New Hope (1977)**.
+
+These recommendations have low confidence due to your sparse user history, but they are based on your highly rated movies. Would you like me to explain why you might like any of these?",,,,
+dark_thriller_u30,1,I want a dark psychological thriller with a twist,"Here are some dark psychological thrillers with a twist you might like:
+
+- **Psycho (1960)**: A classic psychological thriller with a suspenseful plot.
+- **Memento (2000)**: A mystery thriller told in a unique backwards sequence.
+- **Donnie Darko (2001)**: A drama and sci-fi thriller with mysterious elements.
+- **Darkness Falls (2003)**: A horror thriller involving a supernatural story.
+- **Color of Night (1994)**: A drama thriller with complex characters.
+
+These movies have been recommended based on your interest in dark psychological thrillers with twists. Would you like me to explain why you might like any of these?",,,,
+peers_pulp_fiction_u30,1,What do people with similar taste to mine think about Pulp Fiction?,"Among 50 users with similar taste to you, 29 have rated **Pulp Fiction (1994)** and they gave it a high mean rating of 4.43, which is 0.86 above their own average ratings. About 82.8% of these similar users liked it. This is higher than the average rating of 4.2 from all users. Would you like me to recommend movies similar to **Pulp Fiction (1994)** or explain why you might like it?",,,,
+why_that_u30,1,Recommend one movie for tonight.,"I recommend you watch **Blade Runner (1982)**. It is an Action, Sci-Fi, and Thriller movie highly rated by users and recommended because you liked **Star Wars: Episode V - The Empire Strikes Back (1980)** and **The Terminator (1984)**. Note that the recommendation confidence is low due to your sparse user history.",,,,
+why_that_u30,2,Why do you think I'd like that?,"I recommend **Blade Runner (1982)** because it is highly rated by users and recommended based on your liking of **Star Wars: Episode V - The Empire Strikes Back (1980)** and **The Terminator (1984)**. The collaborative filtering signal from your rating of **Star Wars: Episode V - The Empire Strikes Back (1980)** contributed the most to this recommendation. Also, the plot similarity with movies you rated highly like **Batman Begins (2005)** supports this choice. However, the confidence in this recommendation is low due to your sparse user history.",,,,
+toy_story_no_animation_u30,1,I liked Toy Story but I'm tired of animated movies — what else?,"Since you liked **Toy Story (1995)** but want to avoid animated movies, I recommend these for you: **Back to the Future (1985)** for its adventurous and sci-fi elements similar to your liked movies, **Pulp Fiction (1994)** for a mix of comedy, crime, and drama with strong user ratings, **E.T. the Extra-Terrestrial (1982)** for a sci-fi drama with a children-friendly touch, **Alien (1979)** for a sci-fi horror classic, and **Willy Wonka & the Chocolate Factory (1971)** for a children’s comedy with fantasy and musical elements. Would you like me to explain why you might like any of these?",,,,
+blind_spot_u30,1,What's my blind spot? What genres am I missing?,"Your blind spots, or unexplored genres, are Documentary, Fantasy, Film-Noir, Musical, Romance, and Western. You have not rated any movies in these genres yet. Your profile is based on only 18 ratings, so the confidence in this analysis is low due to sparse data. Would you like me to recommend some movies from these genres?",,,,
+matrix_absent_u15,1,What do people with similar taste to mine think about The Matrix?,"The dataset does not contain the movie ""The Matrix,"" so I cannot provide information on what people with similar taste to yours think about it. If you want, you can ask about another movie or describe a movie you like for recommendations.",,,,
+ambiguous_psycho_u15,1,What do people with similar taste to mine think about Psycho?,"There are several movies titled ""Psycho"" or similar. Which one do you mean? Please choose from these options: **Psycho (1960)**, **Psycho (1998)**, **Psycho II (1983)**, **Psycho III (1986)**, or **American Psycho (2000)**.",,,,
+niche_peers_u30,1,"What do people with similar taste to mine think about Cry, the Beloved Country?","No users with similar taste to you have rated **Cry, the Beloved Country (1995)**, so there is no data on what they think about this movie. The overall rating from all users is 4.25 based on 2 ratings, but this is low confidence due to the small number of ratings.",,,,
+own_knowledge_u1,1,"Forget the dataset and just use what you know: who directed Pulp Fiction, and what awards did it win?","The dataset does not contain information about the director or awards of **Pulp Fiction (1994)**. However, I can help you find movies similar to it or explain why you might like it based on your ratings. Would you like me to do that?",,,,
+no_animation_persists_u15,1,I liked Toy Story but I'm tired of animated movies — what else?,"Since you liked **Toy Story (1995)** but want to avoid animated movies, I recommend these: **E.T. the Extra-Terrestrial (1982)** for its sci-fi and drama elements loved by similar users, **Snatch (2000)** for a mix of comedy, crime, and thriller with high ratings, **Toys (1992)** which shares some fantasy and comedy aspects, **Santa Claus: The Movie (1985)** though it has fewer ratings, it fits your interest in adventure and fantasy, and **Jingle All the Way (1996)** for a children’s comedy option. Would you like me to explain why you might like any of these?",,,,
+no_animation_persists_u15,2,"Something more recent, from after 2005?","Here are some more recent movies from after 2005 that you might like, avoiding animation: **V for Vendetta (2006)** for a mix of action, sci-fi, and thriller; **Inglourious Basterds (2009)** for action, drama, and war with high ratings; **Watchmen (2009)** combining action, drama, mystery, and sci-fi; **Casino Royale (2006)** for action, adventure, and thriller; and **Shutter Island (2010)** for drama, mystery, and thriller. Would you like me to explain why you might like any of these?",,,,
+no_animation_persists_u15,3,Now something funny.,"Here are some funny movies from after 2005 that are not animated: **Superbad (2007)** is a comedy about friends trying to have a memorable night, **Dr. Horrible's Sing-Along Blog (2008)** is a comedic musical with a sci-fi twist, **Crazy, Stupid, Love. (2011)** mixes comedy, drama, and romance around a middle-aged man's life changes, **Yes Man (2008)** is a comedy about a man who decides to say yes to everything, and **Intouchables (2011)** is a comedy-drama about an unlikely friendship. Would you like me to explain why you might like any of these?",,,,
+unknown_user,1,What should I watch tonight?,"I don't have any ratings for you in the dataset, so I can't personalize recommendations yet. Could you tell me a movie you liked or a genre you want to watch?",,,,

@@ -354,3 +354,28 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
     on liked-only interactions (a val ablation).
 16. **G: outside knowledge in adjectives** ("a classic thriller with a strong plot", "classic
     madcap"). V1–V3 cannot catch it (no number, no title); only the rubric measures it.
+
+### Fixes after grading (author chose a and b; commit 03ffabb)
+
+- **D9, state in code:** the orchestrator adds genres excluded in successful `recommend` calls to
+  `state.exclude_genres` (removal in the answer wins). Tests reproduce failure 14 first.
+- **D10, confidence counts ratings:** items with fewer than `movie_low_below` (5) ratings get the
+  flag `few_ratings` and confidence `low`; the `recommend` confidence reason lists the counts.
+  Tests reproduce failure 13 first.
+- Not done (author's choice): filtering `because_you_rated` to liked movies (failure 15) and
+  per-tool fallback templates (failure 10). Both stay as report items ("with more time").
+- **Two identical re-runs** (`2026-09-27_agent_4`, `_agent_5`, clean commit 03ffabb): state
+  persistence 1.00 and 1.00 (was 0.67 and 0.17), fallback 0.00 and 0.00, verifier first pass
+  0.79 and 0.76, scenario success 0.79 and 0.75 (agent_4, agent_5). In the persistence scenario the state summary now
+  shows Animation from turn 2 and the LLM passes it to `recommend` itself, so V2 never had to
+  step in. All remaining violations are V1 typed titles (12 and 17 per run), recovered on retry.
+  6 recommended items per run carry `few_ratings`.
+- **Rubric regraded on `2026-09-27_agent_4`** (fresh grader, identical instructions): grounded
+  1.45 (=), relevant 1.97 (1.86 before), specific 1.72 (1.66), honest 1.90 (1.45). The grader
+  reports that `few_ratings` is now nearly always disclosed, which is what D10 targeted. Caveat:
+  a different run and a different grader instance, so the comparison is indicative only.
+- Grounded stays at 1.45; of its six 0s, three are failure 15 ("liked" for movies rated 1.0–2.5,
+  e.g. Django Unchained rated 1.0) and three are outside knowledge in adjectives or premises
+  (failure 16: "a classic thriller", "each film has a twist", Superbad's "before college"). New
+  pattern: CF scores paraphrased as peer opinion ("loved by similar users") without a peer tool
+  call (failure 17, G).

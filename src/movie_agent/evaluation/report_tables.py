@@ -113,21 +113,34 @@ def _agent_runs_table(results: Path) -> list[str]:
         key=lambda p: (p / "metrics.json").stat().st_mtime,
     )
     keys = ["verifier_first_pass_rate", "fallback_rate", "state_persistence", "scenario_success"]
+    header = keys + [f"rubric {c}" for c in RUBRIC_CRITERIA]
     lines = [
         "### All agent runs",
         "",
-        "| Run | Prompt | Commit | " + " | ".join(keys) + " |",
-        "|---|---|---|" + "---|" * len(keys),
+        "Rubric columns are means (0–2) where the run was graded (by an LLM grader, see notes).",
+        "",
+        "| Run | Prompt | Commit | " + " | ".join(header) + " |",
+        "|---|---|---|" + "---|" * len(header),
     ]
     for run in runs:
         m = _load(run)
         cfg = yaml.safe_load((run / "config.yaml").read_text())
-        values = " | ".join(f"{m[k]:.2f}" if isinstance(m.get(k), float) else "-" for k in keys)
+        values = [f"{m[k]:.2f}" if isinstance(m.get(k), float) else "-" for k in keys]
+        values += _rubric_means(run)
         lines.append(
             f"| `{run.name}` | {cfg['agent']['prompt_version']} | "
-            f"{m['meta']['git_commit']} | {values} |"
+            f"{m['meta']['git_commit']} | {' | '.join(values)} |"
         )
     return [*lines, ""]
+
+
+def _rubric_means(run: Path) -> list[str]:
+    """Mean grade per rubric criterion for a run, or "-" if its sheet is not graded."""
+    sheet = run / "rubric_sheet.csv"
+    if not sheet.exists():
+        return ["-"] * len(RUBRIC_CRITERIA)
+    grades = pd.read_csv(sheet)[list(RUBRIC_CRITERIA)].apply(pd.to_numeric, errors="coerce")
+    return [f"{grades[c].mean():.2f}" if grades[c].notna().any() else "-" for c in RUBRIC_CRITERIA]
 
 
 def _agent_table(m: dict, run: Path) -> list[str]:
