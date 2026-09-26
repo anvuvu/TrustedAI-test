@@ -71,6 +71,9 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+#docs design
+.docs
+
 # PyBuilder
 .pybuilder/
 target/
@@ -216,3 +219,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- movie-agent project ---
+.idea/
+cache/
+traces/*
+!traces/examples/
+# the template ignores *.log; the test-run log is a deliverable (design §9.7)
+!eval/results/test_runs.log
