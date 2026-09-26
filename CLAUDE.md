@@ -114,6 +114,6 @@ Three steps (§13). Effort split roughly 40% build, 30% evaluate, 30% analyze an
 
 **Step 3: analyze and write** (DoD §13.3)
 
-- [ ] Freeze; single test run
-- [ ] Tables and figures; 3 failure cases; 3 decisions
-- [ ] `REPORT.md`, root `README.md`, curated transcripts and traces
+- [x] Freeze; single test run (2026-09-27)
+- [x] Tables and figures; 3 failure cases; 3 decisions (2026-09-27)
+- [x] `REPORT.md`, root `README.md`, curated transcripts and traces (2026-09-27)

@@ -397,3 +397,8 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
 - `report-tables` now also refreshes the tables in `REPORT.md` between `<!-- table:NAME -->`
   markers, so the report's tables are generated, never typed. Changing the reporting code after
   the test run does not touch any metric.
+- Fresh-clone check (2026-09-27, clone of 779ab91): `pip install -e ".[dev]"`, 106 tests pass,
+  `validate` reproduces §4.1, embeddings rebuilt from scratch (why-not in 1 min 22 s),
+  `eval offline --split val` gives NDCG identical to `2026-09-26_offline_val_2` for every system,
+  and `report-tables` reproduces the tables in REPORT.md with no diff. Not checked in the clone:
+  the LLM commands (no `.env` there); they were run in the main checkout.
