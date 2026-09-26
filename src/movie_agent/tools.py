@@ -330,10 +330,8 @@ class Toolbox:
         result = self.r.recommend(req)
         low = [i.movie_id for i in result.items if i.confidence == "low"]
         warnings = list(result.warnings) + ([] if result.items else ["no_candidates"])
-        reason = (
-            "sparse user history"
-            if result.sparse_user
-            else (f"{len(low)} item(s) without collaborative signal" if low else "")
+        reason = _recommend_confidence_reason(
+            result.items, result.sparse_user, self.cfg.confidence.movie_low_below
         )
         return ToolResult(
             tool="recommend",
@@ -527,6 +525,18 @@ def openai_schema(name: str, model: type[BaseModel]) -> dict[str, Any]:
         "type": "function",
         "function": {"name": name, "description": doc, "parameters": schema},
     }
+
+
+def _recommend_confidence_reason(items: list, sparse_user: bool, min_ratings: int) -> str:
+    """Why `recommend` is low confidence: sparse user, and per-item flags with counts."""
+    parts = ["sparse user history"] if sparse_user else []
+    few = sum("few_ratings" in i.flags for i in items)
+    no_cf = sum("no_cf_signal" in i.flags for i in items)
+    if few:
+        parts.append(f"{few} item(s) with fewer than {min_ratings} ratings")
+    if no_cf:
+        parts.append(f"{no_cf} item(s) without collaborative signal")
+    return "; ".join(parts)
 
 
 def _pct(fraction: float) -> float:

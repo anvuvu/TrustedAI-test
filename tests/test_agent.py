@@ -157,3 +157,47 @@ def test_focus_movie_is_kept_for_follow_ups(toolbox, cfg):
     agent.run_turn("What about Pulp Fiction?")
     assert agent.state.focus_movie_id == 15
     assert "Focus movie: [[m:15]]" in agent.state_summary()
+
+
+def test_genres_excluded_in_recommend_persist_without_add_exclude(toolbox, cfg):
+    # Failure 14 in docs/notes.md: the LLM excluded Animation in `recommend` but never set
+    # add_exclude_genres, so the next turn's recommendations were unconstrained.
+    ids = top_ids(toolbox, k=3, exclude_genres=["Animation"])
+    first = {"answer": " ".join(f"[[m:{m}]]" for m in ids), "recommended_movie_ids": ids}
+    violating = {"answer": "Try [[m:11]].", "recommended_movie_ids": [11]}  # Shrek: Animation
+    fixed = {"answer": f"Try [[m:{ids[0]}]].", "recommended_movie_ids": ids[:1]}
+    agent = make_agent(
+        toolbox,
+        cfg,
+        [
+            [("recommend", {"user_id": 1, "k": 3, "exclude_genres": ["animation"]})],
+            [("final_answer", first)],
+            [("recommend", {"user_id": 1, "k": 10})],
+            [("final_answer", violating)],
+            [("final_answer", fixed)],
+        ],
+    )
+    agent.run_turn("I'm tired of animated movies.")
+    assert agent.state.exclude_genres == ["Animation"]
+    turn = agent.run_turn("More?")
+    assert turn.record["verifier"][0]["violations"][0]["rule"] == "V2"
+    assert not turn.fallback
+
+
+def test_removing_a_genre_in_the_answer_wins_over_persistence(toolbox, cfg):
+    ids = top_ids(toolbox, k=2, exclude_genres=["Animation"])
+    answer = {
+        "answer": " ".join(f"[[m:{m}]]" for m in ids),
+        "recommended_movie_ids": ids,
+        "remove_exclude_genres": ["Animation"],
+    }
+    agent = make_agent(
+        toolbox,
+        cfg,
+        [
+            [("recommend", {"user_id": 1, "k": 2, "exclude_genres": ["Animation"]})],
+            [("final_answer", answer)],
+        ],
+    )
+    agent.run_turn("Just this once, no animation.")
+    assert agent.state.exclude_genres == []

@@ -95,3 +95,23 @@ def test_items_carry_provenance(ranker):
     item = ranker.recommend(RecommendRequest(user_id=1, query="alien creature", k=1)).items[0]
     assert item.plot_excerpt and set(item.contributions) == set(item.features)
     assert abs(sum(item.contributions.values()) - item.score) < 2e-3  # rounded to 3 dp
+
+
+def test_items_with_few_ratings_are_low_confidence(cfg, ds, embedder):
+    # Failure 13 in docs/notes.md: a query-mode pick with 4 ratings was labelled "high".
+    lenient = cfg.with_overrides(ranking={"sparse_user_threshold": 0})
+    ranker = build_ranker(lenient, ds, embedder=embedder, ease_lambda=1.0)
+    items = ranker.recommend(RecommendRequest(user_id=1, k=3)).items
+    assert all(i.n_ratings < cfg.confidence.movie_low_below for i in items)  # tiny fixture
+    assert all("few_ratings" in i.flags and i.confidence == "low" for i in items)
+    none_few = build_ranker(
+        lenient.with_overrides(confidence={"movie_low_below": 0}),
+        ds,
+        embedder=embedder,
+        ease_lambda=1.0,
+    )
+    assert all(
+        i.confidence == "high"
+        for i in none_few.recommend(RecommendRequest(user_id=1, k=3)).items
+        if "no_cf_signal" not in i.flags
+    )

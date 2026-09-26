@@ -230,7 +230,7 @@ Every tool returns `{ok, error_code, data, confidence, confidence_reason, warnin
 | Peer opinion | Fewer than 3 neighbours rated the movie (high: 8 or more) |
 | User profile | Fewer than 20 ratings |
 | Movie stats | Fewer than 5 ratings |
-| Recommendation item | Flagged `no_cf_signal`, or the user is `sparse_user` |
+| Recommendation item | Flagged `no_cf_signal`, `few_ratings` (the movie has fewer than 5 ratings), or the user is `sparse_user` |
 
 ### 6.2 Tool specifications
 
@@ -271,6 +271,8 @@ class ConversationState(BaseModel):
 ```
 
 "That", "it" or "the second one" resolve through `focus_movie_id` and `last_recommended`, which the LLM sees with their positions.
+
+Excluded genres are kept by the orchestrator, not only by the LLM: after each turn, `exclude_genres` gains every genre excluded in a successful `recommend` call and every `add_exclude_genres`, and loses every `remove_exclude_genres` (removal wins). V2 checks recommendations against this state, so a later call that forgets the constraint is caught (decision D9).
 
 ### 7.2 Prompt rules
 
@@ -590,6 +592,8 @@ Candidates for the report's three decisions. Status is proposed until Step 2 pro
 | D6 | Lean scope (5 tools, 3 verifier rules, JSONL traces). **Accepted**: the Step 2 findings came from traces, `why-not` and the scenario checks | The v1 design (9 tools, 8 rules, trace CLI) | Brief's time budget; effort moved to analysis | — |
 | D7 | Tags not used as evaluation labels. **Accepted** | Tag weak labels for search | 45 taggers, 43% of tags from one user, list-style tags | — |
 | D8 | Title matching: exact forms, then `max(ratio, 0.9 × token_set_ratio)` on article-free forms, subset credit only for forms at least as long as the query (§4.3). Revised in Step 1, 2026-09-26 | rapidfuzz `WRatio` over all forms (v2 draft) | `WRatio` returned "The Matrix" as ambiguous (85.5 against any title containing "the") and "Matrix" as found ("M (1931)"); the replacement passes every §4.3 case and ~35 real queries | Resolution errors (code E) show up in Step 2 scenarios |
+| D9 | Excluded genres persist in code: the orchestrator adds genres excluded in `recommend` to the state (§7.1). Added in Step 2, 2026-09-27 | State updated only through `final_answer.add_exclude_genres` (the v2 draft) | With prompt rules alone, persistence was 4/6 in one run and 1/6 in an identical one; a follow-up call with `exclude_genres=[]` returned Toy Story 3 and the constraint held only because the LLM skipped it | A one-off exclusion ("no horror tonight") now persists until the user relaxes it; revise if scenarios show that confuses users |
+| D10 | A recommendation with fewer than 5 ratings is low confidence (`few_ratings`, §6.1). Added in Step 2, 2026-09-27 | Only `no_cf_signal` and `sparse_user` lower item confidence (the v2 draft) | A query-mode pick with 4 ratings, mean 2.12 and only the query signal was labelled high, so the answer did not hedge; most rubric honest = 0 scores traced to this | — |
 
 ---
 

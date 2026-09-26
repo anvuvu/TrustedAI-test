@@ -331,6 +331,8 @@ class Ranker:
             flags.append("no_cf_signal")
         if ranking.sparse_user:
             flags.append("sparse_user")
+        if stats["n"] < self.cfg.confidence.movie_low_below:
+            flags.append("few_ratings")
         excerpt = None
         if ranking.best_chunk is not None:
             text = self.content.chunk_texts[int(ranking.best_chunk[pos])]

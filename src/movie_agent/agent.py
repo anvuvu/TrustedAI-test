@@ -278,13 +278,27 @@ class Agent:
             session_movie_ids=session_ids,
             recent_recommended_ids=recommended,
             seen_ids=set(self.toolbox.r.history(self.state.user_id)),
-            exclude_genres=set(self._next_exclude_genres(final)),
+            exclude_genres=set(self._next_exclude_genres(final, tool_log)),
             recent_numbers=numbers,
         )
 
-    def _next_exclude_genres(self, final: FinalAnswer) -> list[str]:
+    def _next_exclude_genres(self, final: FinalAnswer, tool_log: list[dict[str, Any]]) -> list[str]:
+        """Excluded genres after this turn: the current ones, plus every genre excluded in a
+        successful `recommend` call this turn, plus `add_exclude_genres`, minus
+        `remove_exclude_genres` (removal wins).
+
+        Genres excluded in `recommend` persist even if the LLM forgets `add_exclude_genres`
+        (design §7.1): with prompt rules alone, persistence was 4/6 in one run and 1/6 in an
+        identical one (docs/notes.md, failure 14).
+        """
         genres = list(self.state.exclude_genres)
-        for g in _valid_genres(final.add_exclude_genres, self.toolbox):
+        excluded_in_calls = [
+            g
+            for call in tool_log
+            if call["name"] == "recommend" and call["result"]["ok"]
+            for g in call["arguments"].get("exclude_genres", [])
+        ]
+        for g in _valid_genres(excluded_in_calls + final.add_exclude_genres, self.toolbox):
             if g not in genres:
                 genres.append(g)
         removed = set(_valid_genres(final.remove_exclude_genres, self.toolbox))
@@ -292,7 +306,7 @@ class Agent:
 
     def _update_state(self, final: FinalAnswer, tool_log: list[dict[str, Any]]) -> None:
         s = self.state
-        s.exclude_genres = self._next_exclude_genres(final)
+        s.exclude_genres = self._next_exclude_genres(final, tool_log)
         if final.focus_movie_id is not None and final.focus_movie_id in self.catalog:
             s.focus_movie_id = final.focus_movie_id
         if final.recommended_movie_ids:
