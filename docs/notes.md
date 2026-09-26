@@ -72,7 +72,8 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
 - Plot embeddings (`bge-small-en-v1.5`): 16,204 chunks for 5,135 movies, built once in about 1.5
   minutes after the model download, cached in `cache/`. The author considered switching to OpenAI
   embeddings while the download was slow and decided to keep the local model (D4 unchanged).
-- **Title resolution deviates from §4.3 (proposal to update the design).** WRatio misfires on this
+- **Title resolution deviated from the §4.3 draft; the author agreed and §4.3, §11 and decision D8 are
+  updated.** WRatio misfires on this
   catalog: "The Matrix" scored 85.5 against every title containing "the" (partial token-set match
   on the article), and "Matrix" resolved as `found` to "M (1931)" (score 90: a one-letter title
   inside the query). Implemented instead: exact match on any form = 100; otherwise

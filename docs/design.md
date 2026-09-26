@@ -127,15 +127,21 @@ The dataset is at `Exam/data/ml-latest-small-filtered/` and is read-only. The fa
 1. Unicode NFKD, strip accents, lowercase. NFKD also maps "³" to "3".
 2. Split off each parenthesized part as an alias, dropping a leading "a.k.a.": "Seven (a.k.a. Se7en)" → main "Seven", alias "Se7en".
 3. Move a trailing article to the front, for the main title and for aliases: "Postman, The" → "the postman"; "Postino, Il" → "il postino". Articles: The, A, An, L', Le, La, Les, Il, El, Der, Die, Das.
-4. Replace "&" with "and", remove punctuation, collapse whitespace.
+4. Replace "&" with "and", delete apostrophes ("Ocean's" → "oceans"), replace other punctuation with spaces, collapse whitespace.
 5. Also index each form without its leading article.
 
 **Resolution** (`find_movie`):
 
-1. If the user gives a year, restrict to that year ±1.
+1. If the user gives a year, restrict to that year ±1. A trailing number in the text ("Heat 1995") is read as a year only if that gives a `found` match; otherwise the text is resolved as typed, so "Death Race 2000" still works.
 2. Exact match on any normalized form scores 100.
-3. Otherwise rapidfuzz `WRatio` over all forms; keep the best score per movie; top 5.
+3. Otherwise compare the query without its leading article with the article-free forms, using rapidfuzz:
+   - `ratio` for every form (catches typos: "pulp fictoin");
+   - for forms at least as long as the query, also `0.9 × token_set_ratio` (catches partial titles: "shawshank" → The Shawshank Redemption). The weight is config `resolve.subset_weight`.
+
+   A movie's score is the best over its forms; keep the top 5.
 4. `found` if the top score is ≥ 90 and at least 5 ahead of the second; `ambiguous` if ≥ 75 with a smaller gap, or several exact matches (remakes, disambiguated by year); otherwise `not_found`.
+
+Why not rapidfuzz `WRatio` (the v2 draft): on this catalog it scores "The Matrix" 85.5 against every title containing "the" (a partial token match on the article), and it resolves "Matrix" as `found` to "M (1931)" because a one-letter title matches inside the query. Dropping articles and giving subset credit only to forms at least as long as the query removes both failures: a short title ("M", "Empire") can no longer match inside a longer query. Known misses, kept as report material: "Ocean's 11" (digits vs words) is `not_found`, and "inceptoin" is `ambiguous` with Inception on top.
 
 Unit tests cover at least: "Se7en", "Il Postino", "Alien 3", "Alien" vs "Aliens", a remake pair, and "The Matrix" (absent from this dataset).
 
@@ -451,7 +457,7 @@ data:
   genre_exclude: ["IMAX", "(no genres listed)"]
   tag_stoplist: ["in netflix queue"]
 stats: {bayes_C: 10, genre_alpha: 3}
-resolve: {found_min: 90, ambiguous_min: 75, min_gap: 5}
+resolve: {found_min: 90, ambiguous_min: 75, min_gap: 5, subset_weight: 0.9}
 user_knn: {k: 50, min_common: 5, gamma: 50}
 ease: {lambda: 500, lambda_grid: [100, 300, 500, 1000]}
 content: {model: BAAI/bge-small-en-v1.5, chunk_tokens: 300, chunk_overlap: 50}
@@ -574,6 +580,7 @@ Candidates for the report's three decisions. Status is proposed until Step 2 pro
 | D5 | Per-user temporal split, full ranking, bootstrap CIs | Random split; sampled negatives | Random splits leak the future; sampled metrics can misorder models | — |
 | D6 | Lean scope (5 tools, 3 verifier rules, JSONL traces) | The v1 design (9 tools, 8 rules, trace CLI) | Brief's time budget; effort moved to analysis | — |
 | D7 | Tags not used as evaluation labels | Tag weak labels for search | 45 taggers, 43% of tags from one user, list-style tags | — |
+| D8 | Title matching: exact forms, then `max(ratio, 0.9 × token_set_ratio)` on article-free forms, subset credit only for forms at least as long as the query (§4.3). Revised in Step 1, 2026-09-26 | rapidfuzz `WRatio` over all forms (v2 draft) | `WRatio` returned "The Matrix" as ambiguous (85.5 against any title containing "the") and "Matrix" as found ("M (1931)"); the replacement passes every §4.3 case and ~35 real queries | Resolution errors (code E) show up in Step 2 scenarios |
 
 ---
 

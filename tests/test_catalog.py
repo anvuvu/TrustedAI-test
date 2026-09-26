@@ -73,3 +73,30 @@ def test_multiword_forms_ignore_single_word_titles(catalog):
     forms = catalog.multiword_forms()
     assert "pulp fiction" in forms and "usual suspects" in forms
     assert "heat" not in forms and "the postman" not in forms  # one word after the article
+
+
+def test_short_title_does_not_match_inside_a_longer_query(catalog):
+    # WRatio would score "heat" inside "heatwave" at 90 (found); plain ratio gives 67.
+    assert catalog.resolve("Heatwave").status == "not_found"
+
+
+def test_apostrophes_are_deleted_not_spaced():
+    assert normalize("Ocean's Eleven") == "oceans eleven"
+    assert normalize("Schindler’s List") == "schindlers list"
+
+
+def test_trailing_number_is_a_year_only_if_that_resolves(cfg):
+    import pandas as pd
+
+    movies = pd.DataFrame(
+        {
+            "title": ["Death Race 2000", "Heat"],
+            "year": [1975, 1995],
+            "genres": [[], []],
+            "plot": ["", ""],
+        },
+        index=pd.Index([1, 2], name="movieId"),
+    )
+    catalog = Catalog(movies, cfg.resolve)
+    assert catalog.resolve("Death Race 2000").movie_id == 1
+    assert catalog.resolve("Heat 1995").movie_id == 2
