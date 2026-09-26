@@ -151,3 +151,12 @@ def test_search_score_is_nan_not_zero_when_ungraded(cfg):
     judgments = pd.DataFrame({"query_id": ["q", "q"], "movie_id": [1, 2], "grade": [None, None]})
     out = score(results, judgments, cfg)["v"]
     assert np.isnan(out["p_at_k"]["mean"]) and out["ungraded"] == 2
+
+
+def test_title_echo_detects_repeated_title_or_year(ds, cfg):
+    from movie_agent.catalog import Catalog
+    from movie_agent.evaluation.scenarios import title_echoes
+
+    catalog = Catalog(ds.movies, cfg.resolve)
+    answer = "Try [[m:5]] (Alien), [[m:2]] (1995) and [[m:10]] (a crime classic)."
+    assert title_echoes(answer, catalog) == ["[[m:5]] (Alien)", "[[m:2]] (1995)"]

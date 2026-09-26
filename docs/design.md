@@ -303,7 +303,7 @@ The renderer replaces each placeholder with "Title (Year)" from the catalog.
 |---|---|
 | V1 Movies | Every `[[m:ID]]` appeared in a tool result this session, and no catalog title of two or more words appears outside a placeholder |
 | V2 Constraints | `recommended_movie_ids` are unseen, satisfy the active constraints, and came from a `recommend` result in this or the previous turn |
-| V3 Numbers | Every number in the answer, except list ordinals and years, appears in this or the previous turn's tool outputs (ratings ±0.05, percentages ±1 point, counts exact) |
+| V3 Numbers | Every number in the answer, except list ordinals and years, appears in this or the previous turn's tool outputs (ratings ±0.05, percentages ±1 point, counts exact). A minus sign or a following "below / lower / less / under" makes the number negative, so "2.3 below their average" matches −2.3 and a flipped sign is caught |
 
 On failure the LLM gets one retry with the verifier message. If that also fails, the agent returns a template answer built directly from the tool outputs and the trace marks `verifier_fallback`. The verifier is tested on about 10 crafted bad answers (§9.1), and its first-pass and fallback rates are reported (§9.4).
 
@@ -581,13 +581,13 @@ Candidates for the report's three decisions. Status is proposed until Step 2 pro
 
 | ID | Decision | Alternative | Why | Would change if |
 |---|---|---|---|---|
-| D1 | Deterministic tools; the LLM only orchestrates and narrates; placeholders + verifier | Free-form LLM answers over retrieved data | Makes R3 enforceable and failures attributable | Verifier rejects too many good answers |
-| D2 | EASE as main recommender; UserKNN kept for peer questions | Matrix factorization; ItemKNN; UserKNN only | Closed form, deterministic, strong on MovieLens, explainable contributions; peer questions need real neighbours | UserKNN or another model beats EASE on val beyond the CI |
+| D1 | Deterministic tools; the LLM only orchestrates and narrates; placeholders + verifier. **Accepted in Step 2**: every first-pass rejection in the final agent run was a real violation (typed titles); one false-positive class (V3 signs) was found and fixed; fallback 0–3% of turns | Free-form LLM answers over retrieved data | Makes R3 enforceable and failures attributable | Verifier rejects too many good answers |
+| D2 | EASE as main recommender; UserKNN kept for peer questions. **Accepted in Step 2**: EASE is the best single model on val (NDCG@10 0.102 vs UserKNN 0.081, MostPopular 0.064) | Matrix factorization; ItemKNN; UserKNN only | Closed form, deterministic, strong on MovieLens, explainable contributions; peer questions need real neighbours | UserKNN or another model beats EASE on val beyond the CI |
 | D3 | Score the whole catalog with a weighted blend of top-N rank scores (N = 200), with no sparse-user weight shift. Revised in Step 2, 2026-09-26 | Candidate generation plus learning-to-rank; the v2 draft's percentile blend; z-score or min-max blend | 5k movies is small; contributions are directly readable. The draft percentile blend lost to EASE on val (0.050 vs 0.102) because percentiles flatten EASE's head; top-200 rank scores match EASE (0.099, n.s.) and follow the query best in query mode (§5.2) | Blend does worse than EASE alone on val (the trigger fired for the draft; revised) |
 | D4 | Chunked plots, max-chunk similarity, local embedding model | Whole-plot embedding; BM25 hybrid; API embeddings | Long plots are not diluted; the matched excerpt is evidence; reproducible and free | Search grades are poor mainly because of the model |
-| D5 | Per-user temporal split, full ranking, bootstrap CIs | Random split; sampled negatives | Random splits leak the future; sampled metrics can misorder models | — |
-| D6 | Lean scope (5 tools, 3 verifier rules, JSONL traces) | The v1 design (9 tools, 8 rules, trace CLI) | Brief's time budget; effort moved to analysis | — |
-| D7 | Tags not used as evaluation labels | Tag weak labels for search | 45 taggers, 43% of tags from one user, list-style tags | — |
+| D5 | Per-user temporal split, full ranking, bootstrap CIs. **Accepted** | Random split; sampled negatives | Random splits leak the future; sampled metrics can misorder models | — |
+| D6 | Lean scope (5 tools, 3 verifier rules, JSONL traces). **Accepted**: the Step 2 findings came from traces, `why-not` and the scenario checks | The v1 design (9 tools, 8 rules, trace CLI) | Brief's time budget; effort moved to analysis | — |
+| D7 | Tags not used as evaluation labels. **Accepted** | Tag weak labels for search | 45 taggers, 43% of tags from one user, list-style tags | — |
 | D8 | Title matching: exact forms, then `max(ratio, 0.9 × token_set_ratio)` on article-free forms, subset credit only for forms at least as long as the query (§4.3). Revised in Step 1, 2026-09-26 | rapidfuzz `WRatio` over all forms (v2 draft) | `WRatio` returned "The Matrix" as ambiguous (85.5 against any title containing "the") and "Matrix" as found ("M (1931)"); the replacement passes every §4.3 case and ~35 real queries | Resolution errors (code E) show up in Step 2 scenarios |
 
 ---

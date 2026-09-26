@@ -23,7 +23,7 @@ def context(exclude=("Horror",)):
         recent_recommended_ids={4, 10},
         seen_ids={2, 5, 15},
         exclude_genres=set(exclude),
-        recent_numbers=[4.25, 12, 0.46, 3.9, 7],
+        recent_numbers=[4.25, 12, 0.46, 3.9, 7, -2.3, 0.62],
     )
 
 

@@ -7,6 +7,7 @@ saved as transcripts. Runs on all ratings, as deployed in `chat`.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,7 @@ import pandas as pd
 import yaml
 
 from movie_agent.agent import Agent
+from movie_agent.catalog import Catalog, normalize
 from movie_agent.config import PROJECT_ROOT, Config
 from movie_agent.data import Dataset
 from movie_agent.engines import Embedder
@@ -27,6 +29,22 @@ from movie_agent.trace import TraceWriter, versions
 
 SCENARIOS = PROJECT_ROOT / "eval" / "scenarios.yaml"
 RUBRIC_CRITERIA = ("grounded", "relevant", "specific", "honest")
+_ECHO = re.compile(r"\[\[m:(\d+)\]\]\s*\(([^()]*)\)")
+
+
+def title_echoes(answer: str, catalog: Catalog) -> list[str]:
+    """Placeholders followed by their own title or year in parentheses, e.g. "[[m:1214]] (Alien)".
+
+    The renderer already prints "Title (Year)", so these repeat it (failure 1 in docs/notes.md).
+    """
+    found = []
+    for match in _ECHO.finditer(answer):
+        movie_id, inner = int(match.group(1)), match.group(2).strip()
+        if movie_id in catalog and (
+            normalize(inner) in catalog.forms[movie_id] or inner == str(catalog.year(movie_id))
+        ):
+            found.append(match.group(0))
+    return found
 
 
 def check_turn(expect: dict[str, Any], record: dict[str, Any], toolbox: Toolbox) -> dict[str, bool]:
@@ -39,6 +57,7 @@ def check_turn(expect: dict[str, Any], record: dict[str, Any], toolbox: Toolbox)
         and not any(t in called for t in expect.get("forbid_tools", [])),
         "verifier_first_pass": bool(record["verifier_first_pass"]),
         "no_fallback": not record["verifier_fallback"],
+        "no_title_echo": not title_echoes(record["final_answer"]["answer"], toolbox.r.catalog),
     }
     if "recommends" in expect:
         checks["recommends"] = bool(recommended) == expect["recommends"]

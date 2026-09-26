@@ -5,7 +5,9 @@ V1 Movies: every [[m:ID]] appeared in a tool result this session, and no catalog
 V2 Constraints: recommended movies are unseen, avoid the active excluded genres, and came
    from a `recommend` result in this or the previous turn.
 V3 Numbers: every number (except list ordinals and years) appears in this or the previous
-   turn's tool outputs, within tolerance.
+   turn's tool outputs, within tolerance. A minus sign or a direction word right after the
+   number ("2.3 below their average") makes it negative, so "0.6 below" is checked against
+   -0.6 and a flipped sign is caught.
 """
 
 from __future__ import annotations
@@ -23,6 +25,12 @@ from movie_agent.config import VerifierConfig
 PLACEHOLDER = re.compile(r"\[\[m:(\d+)\]\]")
 _NUMBER = re.compile(r"(?<![\w.])(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(\s?%)?")
 _ORDINAL = re.compile(r"^\s*(?:[-*]\s*)?\d+[.)]\s", re.MULTILINE)
+_ANSWER_NUMBER = re.compile(
+    r"(?<![\w.])(?P<sign>[-\u2212])?(?P<whole>\d{1,3}(?:,\d{3})+|\d+)(?P<frac>\.\d+)?(?P<pct>\s?%)?"
+)
+_BELOW = re.compile(
+    r"\s*(?:points?\s+|stars?\s+)?(?:below|lower|less|under|worse)\b", re.IGNORECASE
+)
 
 
 class Violation(BaseModel):
@@ -125,13 +133,21 @@ class Verifier:
         text = PLACEHOLDER.sub(" ", answer)
         text = _ORDINAL.sub(" ", text)
         out = []
-        for match in _NUMBER.finditer(text):
-            whole, frac, pct = match.group(1), match.group(2), match.group(3)
+        for match in _ANSWER_NUMBER.finditer(text):
+            whole, frac, pct = match.group("whole"), match.group("frac"), match.group("pct")
             value = float(whole.replace(",", "") + (frac or ""))
             kind = "pct" if pct else "decimal" if frac else "int"
-            if kind == "int" and self.cfg.year_min <= value <= self.cfg.year_max:
+            if (
+                kind == "int"
+                and not match.group("sign")
+                and (self.cfg.year_min <= value <= self.cfg.year_max)
+            ):
                 continue  # years
-            out.append((match.group(0).strip(), value, kind))
+            below = bool(_BELOW.match(text, match.end()))
+            if match.group("sign") or below:
+                value = -value
+            label = match.group(0).strip() + (" below" if below else "")
+            out.append((label, value, kind))
         return out
 
     def _supported(self, value: float, kind: str, numbers: list[float]) -> bool:

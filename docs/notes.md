@@ -198,3 +198,94 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
 - Deviation: the diagnosis tried 11 variants on val; val is the tuning split, the test split is
   untouched. The chosen variant is not the val maximum (z-score) but the one that also behaves in
   query mode, so the val number is not cherry-picked upward.
+
+### Offline val on the revised ranking (`eval/results/2026-09-26_offline_val_2`)
+
+- Blend 0.099 [0.084, 0.114] vs EASE 0.102: paired −0.003 [−0.016, 0.009], no significant
+  difference (was −0.052). UserKNN (sum form) 0.081, now above MostPopular 0.064. Tail recall is
+  still 0 for every CF system; ContentProfile stays the only one with tail hits.
+- **Chosen values (Step 2):** EASE λ = 500 (best on the grid; 1000 within 0.001). Personal weights
+  stay cf 0.7 / content 0.2 / quality 0.1: the sweep peaks at cf 0.9 (0.103) but the paired
+  differences to 0.7 are not significant (cf 0.9 − 0.7: +0.004 [−0.006, 0.012]; on users with
+  < 30 train ratings −0.007 [−0.027, 0.013]), and 0.7 keeps the plot-similarity signal in personal
+  explanations. Rule used: keep the default unless another value is significantly better.
+  Evidence: `cf_weight_paired.md` in the same results directory.
+
+### Search re-run on the revised ranking (`eval/results/2026-09-27_search`)
+
+- The ungraded Step 1 sheet (0 of 84 graded) was reset so the author only grades the pools the
+  current system shows: 79 pairs in `eval/search_judgments.csv`.
+- Query mode now follows the query: 26% of the plain top 5 are movies with < 5 ratings (0%
+  before), 42% without `min_ratings`.
+- **New failure pattern (S, to be quantified by the grades):** title words leak into matching
+  through the "Title. Genres." chunk prefix (§5.1): "Darkness Falls" and "Twisted" for "dark ...
+  with a twist", "Lonely Are the Brave" and "In a Lonely Place" for "loneliness", "Road Trip" for
+  "road trip". Possible fix: embed plot text without the title in the prefix, keep genres.
+
+### Agent: prompt v2 (`prompts/system_v2.md`, now the default)
+
+- v2 adds: an explicit wrong/right example for placeholders (no typed titles, nothing after a
+  placeholder), `add_exclude_genres` for lasting genre constraints, `USER_NOT_FOUND` handling, a
+  reread-before-final_answer step. A new automatic scenario check `no_title_echo` measures
+  failure 1 (placeholder followed by its own title or year).
+- Same ranking, same scenarios, v1 (`2026-09-27_agent`) vs v2 (`2026-09-27_agent_2`): verifier
+  first pass 0.48 -> 0.79, fallback 0.10 -> 0.00, state persistence 0.00 -> 0.67, no title echo
+  0.86 -> 0.97, scenario success 0.50 -> 0.67, tokens per turn 9,462 -> 6,518.
+- **Run-to-run variance (important for the report).** A second v2 run (`2026-09-27_agent_3`, only
+  the V3 fix changed, which does not affect these turns) gave state persistence 0.17 (1 of 6) and
+  first pass 0.86. gpt-4.1-mini is not deterministic at temperature 0, and with 6 state turns one
+  run cannot tell 0.17 from 0.67. Report both runs; do not claim the prompt fixed state
+  persistence. A deterministic fix (the orchestrator persists genres excluded in `recommend`
+  unless the answer removes them) is proposed below.
+- Remaining v2 failures are all V1 typed titles, recovered on retry except one fallback
+  (`why_that_u30` turn 1 typed "star wars episode v the empire strikes back" and "batman begins"
+  twice).
+
+### Failures found in Step 2 (continuing the numbering)
+
+9. **Verifier false positive, V3 (G in the verifier).** Perturbation test, user 30 / Forrest Gump
+   perturbed (`traces/eval-2026-09-27_honesty-pert-30-perturbed.jsonl`): the tool said
+   `similar_users_mean_vs_own_average = -2.3`, the answer said "2.3 below their own average rating",
+   and V3 rejected it twice (signed comparison), so the user got the unhelpful template fallback.
+   "2.01 below" in the T2 answer had passed only by coincidence (2.0 is a neighbour's rating).
+   Fix: V3 reads a minus sign or a following "below / lower / less / under" as negative; verifier
+   cases added first (a correct "2.3 below" passes, "0.62 below" against +0.62 and "2.3 above"
+   against −2.3 fail). Re-run: that answer passes on the first try. Design §7.4 V3 row clarified.
+10. **Fallback for non-recommend turns is uninformative (design limitation).** When a peer or explain
+    answer fails twice, the template says only "I could not produce an answer that passes my
+    grounding checks". Proposed: a template per tool (e.g. peer_opinion: "N similar users rated it,
+    mean X, Y above/below their averages").
+11. **S / R (seed mode).** Toy Story minus Animation for user 1 (v2 run): Gremlins, Babe, Snatch,
+    The Santa Clause, Santa Claus: The Movie. Seed plot similarity keeps family and Christmas
+    films after the Animation filter; confirms the §9.6 candidate.
+
+### Honesty tests, final Step 2 run (`eval/results/2026-09-27_honesty_2`)
+
+- Pair picker now chooses unseen, distinct movies: Terminator 2 (user 1), Jurassic Park (user 15),
+  Forrest Gump (user 30). The stance follows the flipped data in all 3 pairs (e.g. Forrest Gump
+  4.18, +0.52 above averages, 74.4% liked -> 1.32, 2.3 below, none liked). Stance and extra-facts
+  labels still need the author's hand grading in `perturbation_sheet.csv`.
+- Explanation fidelity with top-N rank scores: 0.27 [0.10, 0.43] of top-1 recommendations drop
+  >= 5 places when the top driver is removed (was 0.07 with percentiles); mean score drop 0.091
+  [0.043, 0.151] vs 0.007 for a random history movie. All 30 top drivers are cf. The named driver
+  is real (13x the control's score effect) but usually not decisive on its own.
+- LLM attribution: 9 of 10 answers name the engine's top driver movie (10 of 10 in the previous
+  run); match to be judged by the author in `attribution_sheet.csv`.
+- Reproducibility note: `2026-09-27_agent_2`, `_agent_3`, `_honesty_2`, `_search` and the second
+  offline run record a `-dirty` commit (`c315916-dirty`) because they ran on uncommitted working-
+  tree changes (prompt v2, the V3 sign fix, the pair picker); those changes are in the commit that
+  follows c315916 ("Step 2: prompt v2, sign-aware V3, ...").
+
+### Step 2 status (2026-09-27)
+
+- Done: offline ranking and tuned values (λ 500, personal cf .7 / content .2 / quality .1, top-200
+  rank scores); agent suite run, fixed (prompt v2) and re-run twice; honesty tests run; 11
+  failures logged with root-cause codes; decision log D1, D2, D5, D6, D7 accepted, D3 and D8
+  revised, D4 pending the search grades.
+- Waiting for the author (hand grading, by design): 79 pairs in `eval/search_judgments.csv`;
+  `rubric_sheet.csv` in `eval/results/2026-09-27_agent_3`; `perturbation_sheet.csv` and
+  `attribution_sheet.csv` in `eval/results/2026-09-27_honesty_2`.
+- Open proposals: (a) orchestrator persists genres excluded in `recommend` (state failures are
+  unreliable to fix by prompt: 4/6 vs 1/6 in identical runs); (b) per-tool fallback templates;
+  (c) embed plots without the title in the chunk prefix (title-word leakage in search), to decide
+  after grading.

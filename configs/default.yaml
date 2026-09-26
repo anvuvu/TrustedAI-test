@@ -85,7 +85,7 @@ agent:
   max_tool_calls: 6
   max_retries: 1                 # verifier retries before the template fallback
   history_turns: 6
-  prompt_version: system_v1
+  prompt_version: system_v2
   request_timeout_s: 60
 
 verifier:

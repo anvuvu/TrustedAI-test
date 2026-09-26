@@ -3,7 +3,7 @@
 #   recommended by `recommend` in this or the previous turn: 4, 10
 #   the user has rated: 2, 5, 15
 #   active excluded genres: Horror
-#   numbers in recent tool outputs: 4.25, 12, 0.46, 3.9, 7
+#   numbers in recent tool outputs: 4.25, 12, 0.46, 3.9, 7, -2.3, 0.62
 bad:
   - id: bare_title
     answer: "You might enjoy The Usual Suspects, which similar users rated 4.25."
@@ -50,6 +50,14 @@ bad:
     answer: "[[m:4]] has 1,203 ratings."
     recommended: [4]
     rule: V3
+  - id: sign_flipped_by_direction_word
+    answer: "Similar users rated [[m:10]] 2.3 above their own averages."
+    recommended: [10]
+    rule: V3
+  - id: positive_value_stated_as_below
+    answer: "Similar users rated [[m:10]] 0.62 below their own averages."
+    recommended: [10]
+    rule: V3
 good:
   - id: grounded_recommendation
     answer: "1. [[m:10]] — 12 similar users rated it 4.25 on average (46% liked it).\n2. [[m:4]] — a 3.9 Bayesian average."
@@ -62,6 +70,12 @@ good:
     recommended: [4, 10]
   - id: history_movies_can_be_mentioned
     answer: "Because you rated [[m:2]] and [[m:15]] highly, try [[m:10]]."
+    recommended: [10]
+  - id: negative_value_stated_with_direction_word
+    answer: "Similar users rated [[m:10]] 2.3 points below their own averages, and [[m:4]] 0.62 above."
+    recommended: [10, 4]
+  - id: negative_value_with_minus_sign
+    answer: "Their mean deviation for [[m:10]] is −2.3."
     recommended: [10]
   - id: no_recommendation
     answer: "The dataset does not contain that movie. Could you describe what you want instead?"

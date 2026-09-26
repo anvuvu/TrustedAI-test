@@ -32,16 +32,23 @@ from movie_agent.trace import TraceWriter, versions
 
 
 def perturbation_pairs(ranker: Ranker, cfg: Config) -> list[tuple[int, int, list[int]]]:
-    """(user, movie, neighbours who rated it) for the qualitative users: the movie most rated
-    by each user's neighbours, if at least `perturbation_min_neighbours` rated it."""
-    pairs = []
+    """(user, movie, neighbours who rated it) for the qualitative users.
+
+    For each user: the movie most rated by their neighbours among movies the user has not
+    rated and no earlier pair uses, if at least `perturbation_min_neighbours` rated it. (The
+    first version took the overall most rated movie, which was a Star Wars film the user had
+    rated 5.0 for all three users.)
+    """
+    pairs: list[tuple[int, int, list[int]]] = []
     knn = ranker.user_knn
     for user_id in cfg.evaluation.qualitative_users[: cfg.evaluation.perturbation_pairs]:
         neighbours = [n.user_id for n in knn.neighbours(user_id)]
         if not neighbours:
             continue
         rows = [knn.row_of(n) for n in neighbours]
-        counts = np.asarray(knn.mask[rows].sum(axis=0)).ravel()
+        counts = np.asarray(knn.mask[rows].sum(axis=0)).ravel().astype(float)
+        taken = set(ranker.history(user_id)) | {m for _, m, _ in pairs}
+        counts[np.isin(ranker.movie_ids, list(taken))] = -1
         best = int(np.lexsort((ranker.movie_ids, -counts))[0])
         if counts[best] < cfg.evaluation.perturbation_min_neighbours:
             continue
@@ -147,10 +154,11 @@ def fidelity_rows(
         }
         for name, removed in (("driver", x), ("control", control)):
             hist = {m: r for m, r in history.items() if m != removed}
-            new_rank = ranker.rank(RecommendRequest(user_id=user_id), history=hist).rank_of(
-                item.movie_id
-            )
+            ranking = ranker.rank(RecommendRequest(user_id=user_id), history=hist)
+            new_rank = ranking.rank_of(item.movie_id)
             new_rank = new_rank if new_rank is not None else len(ranker.movie_ids)
+            pos = ranker.content.position(item.movie_id)
+            row[f"{name}_score_drop"] = round(item.score - float(ranking.score[pos]), 4)
             row[f"{name}_new_rank"] = new_rank
             row[f"{name}_faithful"] = (
                 new_rank - 1 >= ecfg.fidelity_min_drop or new_rank > ecfg.fidelity_top
@@ -215,6 +223,8 @@ def run_honesty(
             "driver_faithful": bootstrap_ci(valid["driver_faithful"].astype(float), cfg, rng),
             "control_faithful": bootstrap_ci(valid["control_faithful"].astype(float), cfg, rng),
             "driver_signals": valid["driver"].value_counts().to_dict(),
+            "driver_score_drop": bootstrap_ci(valid["driver_score_drop"], cfg, rng),
+            "control_score_drop": bootstrap_ci(valid["control_score_drop"], cfg, rng),
         }
     }
     if llm_factory is not None:
@@ -255,6 +265,8 @@ def _summary(m: dict[str, Any]) -> str:
         f"- 'faithful' when a random history movie is removed (control): "
         f"{fmt_ci(f['control_faithful'], 2)}",
         f"- driver signals: {f['driver_signals']}",
+        f"- mean score drop, driver removed: {fmt_ci(f['driver_score_drop'])}; "
+        f"control: {fmt_ci(f['control_score_drop'])}",
     ]
     if "perturbation" in m:
         p, a = m["perturbation"], m["llm_attribution"]

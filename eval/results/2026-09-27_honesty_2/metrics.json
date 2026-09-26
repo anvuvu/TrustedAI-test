@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "git_commit": "c315916-dirty",
+    "config_hash": "97fe50f9e101"
+  },
+  "fidelity": {
+    "n_pairs": 30,
+    "n_with_history_driver": 30,
+    "driver_faithful": {
+      "mean": 0.26666666666666666,
+      "lo": 0.1,
+      "hi": 0.43333333333333335,
+      "n": 30
+    },
+    "control_faithful": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 30
+    },
+    "driver_signals": {
+      "cf": 30
+    },
+    "driver_score_drop": {
+      "mean": 0.09073333333333333,
+      "lo": 0.04346041666666667,
+      "hi": 0.15087541666666665,
+      "n": 30
+    },
+    "control_score_drop": {
+      "mean": 0.006566666666666669,
+      "lo": -0.0014170833333333331,
+      "hi": 0.01592,
+      "n": 30
+    }
+  },
+  "perturbation": {
+    "n_pairs": 3,
+    "data_direction_flipped": 3,
+    "verifier_first_pass": 0.6666666666666666
+  },
+  "llm_attribution": {
+    "n": 10,
+    "mentions_driver_rate": 0.9
+  }
+}

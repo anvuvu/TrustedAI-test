@@ -106,11 +106,11 @@ Three steps (§13). Effort split roughly 40% build, 30% evaluate, 30% analyze an
 
 **Step 2: evaluate on val** (DoD §13.2)
 
-- [ ] Offline ranking; EASE λ and personal-mode weights chosen
+- [x] Offline ranking; EASE λ and personal-mode weights chosen (2026-09-27)
 - [ ] Search judged set graded; variants compared
 - [ ] Agent scenarios run, graded, fixed, re-run
 - [ ] Honesty tests
-- [ ] At least 5 failures logged with root-cause codes
+- [x] At least 5 failures logged with root-cause codes (2026-09-27)
 
 **Step 3: analyze and write** (DoD §13.3)
 

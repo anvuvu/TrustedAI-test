@@ -12,6 +12,7 @@ from pathlib import Path
 
 import matplotlib
 import pandas as pd
+import yaml
 
 from movie_agent.config import Config
 from movie_agent.evaluation.results import fmt_ci
@@ -52,6 +53,7 @@ def run_report_tables(cfg: Config) -> Path:
         lines += _search_table(_load(runs["search"]), runs["search"].name)
     if runs["agent"]:
         lines += _agent_table(_load(runs["agent"]), runs["agent"])
+        lines += _agent_runs_table(results)
     if runs["honesty"]:
         lines += _honesty_table(_load(runs["honesty"]), runs["honesty"].name)
     out = results / "report_tables.md"
@@ -101,6 +103,30 @@ def _search_table(m: dict, run: str) -> list[str]:
         f"{v['mean_bayes_avg']:.2f} | {v['share_under_5_ratings']:.2f} |"
         for n, v in m["variants"].items()
     ]
+    return [*lines, ""]
+
+
+def _agent_runs_table(results: Path) -> list[str]:
+    """Every saved agent run side by side: prompt changes and run-to-run variance."""
+    runs = sorted(
+        (p for p in results.glob("*_agent*") if (p / "metrics.json").exists()),
+        key=lambda p: (p / "metrics.json").stat().st_mtime,
+    )
+    keys = ["verifier_first_pass_rate", "fallback_rate", "state_persistence", "scenario_success"]
+    lines = [
+        "### All agent runs",
+        "",
+        "| Run | Prompt | Commit | " + " | ".join(keys) + " |",
+        "|---|---|---|" + "---|" * len(keys),
+    ]
+    for run in runs:
+        m = _load(run)
+        cfg = yaml.safe_load((run / "config.yaml").read_text())
+        values = " | ".join(f"{m[k]:.2f}" if isinstance(m.get(k), float) else "-" for k in keys)
+        lines.append(
+            f"| `{run.name}` | {cfg['agent']['prompt_version']} | "
+            f"{m['meta']['git_commit']} | {values} |"
+        )
     return [*lines, ""]
 
 
