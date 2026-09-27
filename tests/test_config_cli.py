@@ -1,6 +1,6 @@
 from typer.testing import CliRunner
 
-from movie_agent.cli import app
+from movie_agent.cli import _read_message, app
 from movie_agent.config import DEFAULT_CONFIG, load_config
 
 
@@ -27,3 +27,13 @@ def test_cli_help_lists_every_design_command():
     result = CliRunner().invoke(app, ["eval", "--help"])
     for name in ["offline", "search", "agent", "honesty"]:
         assert name in result.output
+
+
+def test_chat_input_drops_bytes_left_by_a_partial_backspace(monkeypatch):
+    # "về" typed as "vê", then a backspace that removed one byte of "ê" (C3 AA) before "ề".
+    # stdin decodes the stray C3 byte to "\udcc3", which the OpenAI client cannot encode.
+    raw = b"tim phim v\xc3\xe1\xbb\x81 giang sinh ".decode("utf-8", "surrogateescape")
+    monkeypatch.setattr("builtins.input", lambda prompt: raw)
+    message = _read_message("you> ")
+    assert message == "tim phim về giang sinh"
+    message.encode("utf-8")
