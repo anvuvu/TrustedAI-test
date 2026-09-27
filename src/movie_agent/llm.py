@@ -71,6 +71,9 @@ class OpenAIClient:
         self._client = OpenAI(api_key=key, timeout=cfg.request_timeout_s)
 
     def complete(self, messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> LLMResponse:
+        # Reasoning models (gpt-5.x) take `reasoning_effort`; older models reject it, so it is
+        # sent only when configured.
+        extra = {"reasoning_effort": self.cfg.reasoning_effort} if self.cfg.reasoning_effort else {}
         start = time.perf_counter()
         response = self._client.chat.completions.create(
             model=self.model,
@@ -78,6 +81,7 @@ class OpenAIClient:
             tools=tools,  # type: ignore[arg-type]
             tool_choice="required",
             temperature=self.cfg.temperature,
+            **extra,  # type: ignore[arg-type]
         )
         latency = (time.perf_counter() - start) * 1000
         message = response.choices[0].message

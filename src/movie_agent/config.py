@@ -110,6 +110,7 @@ class AgentConfig(_Section):
     provider: str
     model: str
     temperature: float
+    reasoning_effort: str | None = None
     max_tool_calls: int
     max_retries: int
     history_turns: int

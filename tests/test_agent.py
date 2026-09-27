@@ -201,3 +201,26 @@ def test_removing_a_genre_in_the_answer_wins_over_persistence(toolbox, cfg):
     )
     agent.run_turn("Just this once, no animation.")
     assert agent.state.exclude_genres == []
+
+
+def test_openai_client_sends_reasoning_effort_only_when_configured(cfg, monkeypatch):
+    from types import SimpleNamespace
+
+    from movie_agent.llm import OpenAIClient
+
+    sent = []
+    message = SimpleNamespace(content=None, tool_calls=[])
+    response = SimpleNamespace(choices=[SimpleNamespace(message=message)], usage=None)
+    fake = SimpleNamespace(
+        chat=SimpleNamespace(
+            completions=SimpleNamespace(create=lambda **kw: sent.append(kw) or response)
+        )
+    )
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    for effort in ("none", None):
+        client = OpenAIClient(cfg.agent.model_copy(update={"reasoning_effort": effort}))
+        client._client = fake
+        client.complete([{"role": "user", "content": "hi"}], [])
+    assert sent[0]["reasoning_effort"] == "none"
+    assert "reasoning_effort" not in sent[1]
+    assert sent[0]["temperature"] == sent[1]["temperature"] == cfg.agent.temperature

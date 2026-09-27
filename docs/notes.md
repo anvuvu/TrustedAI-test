@@ -402,3 +402,90 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
   `eval offline --split val` gives NDCG identical to `2026-09-26_offline_val_2` for every system,
   and `report-tables` reproduces the tables in REPORT.md with no diff. Not checked in the clone:
   the LLM commands (no `.env` there); they were run in the main checkout.
+
+## 2026-09-27 — Model swap trial: gpt-5.1 in place of gpt-4.1-mini (author's request)
+
+- **Change:** `agent.model: gpt-5.1` and a new optional `agent.reasoning_effort` (sent only when
+  set; D11). gpt-5.1 rejects `temperature: 0` unless `reasoning_effort` is `none` (checked against
+  the API), so the config sets `"none"` and evaluation stays at temperature 0. Nothing else
+  changed: `agent_5` and `agent_6` configs differ only in these two keys, and the code between
+  their commits differs only in `report_tables.py`. The runs were made from a dirty tree
+  (`7a2a4e6-dirty`); the diff is this change. The offline, search and test-split results are
+  LLM-free and are not affected; the test split was not touched.
+- **Runs:** `eval/results/2026-09-27_agent_6` (gpt-5.1) and `2026-09-27_honesty_3` (gpt-5.1);
+  gpt-4.1-mini reference: `2026-09-27_agent_5` and `2026-09-27_honesty_2`, same prompt v2.
+- **Automatic checks (agent_6 vs agent_5 / agent_4):** scenario success 0.75 (0.75 / 0.79);
+  verifier first pass 0.72 (0.76 / 0.79); fallback 0.03, one turn (0 / 0); tool chain 0.97
+  (1.00 / 1.00); constraints and state 1.00; tool calls 36 (48 / 41); tokens per turn about 7.0k
+  (7.1k / 6.6k), but completion tokens 10.9k per run instead of 5.9k; p50 latency 4.4 s (2.7 s),
+  p95 9.5 s (5.4 s).
+- **Blind paired grading.** One fresh grader per half of the 29 turns graded both models' answers to
+  the same turns, shuffled, versions hidden (`eval/grading/rubric_packet_blind_{1,2}.md`, key and
+  rationales in `rubric_blind_key.csv` and `rubric_grades_blind_with_rationale.csv`). This controls
+  for grader drift, which the earlier agent_3 / agent_4 comparison did not. gpt-5.1 minus
+  gpt-4.1-mini, paired bootstrap over turns (seed 42):
+  grounded 1.14 vs 1.48, **−0.34 [−0.62, −0.07]** (worse in 11 turns, better in 3; zeros 9 vs 3);
+  relevant 2.00 vs 2.00; specific 1.86 vs 1.72, +0.14 [−0.07, +0.34]; honest 1.59 vs 1.76,
+  −0.17 [−0.41, +0.03]. The gpt-4.1-mini grades from this grader match the agent_4 grades from the
+  earlier grader (grounded 1.48 vs 1.45, specific 1.72 vs 1.72), which supports the grading.
+- **Honesty, blind (`eval/grading/honesty_packet_blind.md`):** fidelity identical (LLM-free).
+  Perturbation stance follows the data 6/6 for both; extra facts 1/6 (gpt-5.1, failure 20) vs 0/6.
+  Attribution yes/partly/no 6/4/0 (gpt-5.1) vs 4/5/1; the gpt-4.1-mini "no" is the same fallback
+  answer as in the first grading (which gave 5/4/1 on the same answers: grader variance of one step).
+- **Conclusion:** gpt-5.1 does not beat gpt-4.1-mini here. It is significantly less grounded
+  (the brief's R3), no better on relevance, about 1.6× slower and more expensive per token. It
+  writes richer answers (specific +0.14, n.s.), and the richness comes partly from its own movie
+  knowledge and from statistics attributed to the wrong population. The verifier catches typed
+  titles and invented numbers, but not these.
+
+### Failures found in the gpt-5.1 trial (continuing the numbering)
+
+18. **G: all-user statistics presented as peer opinion.** 5 of gpt-5.1's 9 grounded zeros: "similar
+    raters give it a high mean rating of 4.16 across 93 ratings" (tonight_u1), where 4.16 / 93 are
+    the all-user `mean_rating` / `n_ratings` and no `peer_opinion` was called. V3 passes because
+    the number exists. It is failure 17 with a number attached. Fix options: a prompt rule
+    ("similar users" only from `peer_opinion` output) and a verifier rule (a similar-users claim
+    needs a `peer_opinion` call in this or the previous turn).
+19. **G: outside-knowledge characterizations (failure 16), more of them.** "Quirky, nostalgic
+    coming-of-age story", "Darkly funny", Free Willy "about a kid bonding with an animal" (the
+    excerpt describes a captured orca), "toy-like car". Only the rubric measures this.
+20. **Verifier false positives on gpt-5.1's phrasing, and a false answer after the retry.** V3 hits
+    4 (0 in every gpt-4.1-mini run), for example '2.3' in `honesty_3` pert-30-perturbed, where the
+    tool output has −2.3 (probably "below … by 2.3", with the direction word before the number). The
+    retry told the user "the tool reports a difference of −2.3, but I'm not allowed to restate that
+    number since it's not in the tool output text itself", which is false. V1 also flagged generic
+    phrases that are catalog titles ("road trip", "about a boy"); these drafts probably also carried
+    outside-knowledge descriptions (Zombieland's final text says "offbeat journey feel"). Not
+    fixed; the V3 direction rule and the retry feedback wording are the causes to look at.
+21. **T/U: movie name used as query text instead of a seed.** toy_story_no_animation_u15 and
+    no_animation_persists_u15: gpt-5.1 called `recommend(query="like Toy Story but not animated")`
+    without `find_movie`, so the query matches the word "toy": Babes in Toyland, Epic Movie
+    (mean 1.12 from 4 ratings). gpt-4.1-mini passed the tool-chain check in every run.
+22. **G, caught: placeholder from memory.** no_animation_persists_u15 turn 1: after V1 rejected the
+    typed "Toy Story", the retry used `[[m:3114]]` (Toy Story 2's MovieLens ID, never in a tool
+    result). V1 rejected it and the template fallback answered. The model knows MovieLens IDs;
+    the placeholder check still holds.
+23. **Trace gap: rejected drafts are not stored.** `llm_calls` keeps only tool names, so the text
+    of a draft the verifier rejected cannot be audited (20 is inferred from the violation messages
+    and the accepted retry). Design §8.1 promises every LLM response. Fix: store the rejected
+    `final_answer` arguments in the trace.
+24. **Harness bug: `pytest` overwrote the tables in `REPORT.md`.** Since `report-tables` started
+    refreshing `REPORT.md` (Step 3), `test_report_tables_from_saved_results` called
+    `run_report_tables(cfg)`, which defaults to the real report, so every test run replaced the
+    report's tables with tiny-fixture numbers until the next `report-tables`. Found here because
+    `git status` showed `REPORT.md` modified; restored from HEAD. The test now writes a temporary
+    report and checks that its marked block is refreshed.
+
+### Decision after the trial (author, 2026-09-27)
+
+- The author chose the recommendation: **the default LLM goes back to gpt-4.1-mini** (D11
+  rejected gpt-5.1); `agent.reasoning_effort` stays in the config as `null` (not sent).
+- The blind paired grades are stored once, in `eval/grading/*_blind_with_rationale.csv`, with the
+  unblinding keys. The rubric and honesty sheets of `agent_5`, `agent_6` and `honesty_3` stay
+  ungraded, so the report's main agent and honesty tables still come from `agent_4` and
+  `honesty_2`, the runs its text quotes.
+- `report-tables` now picks agent and honesty runs made with the configured model, shows the
+  model of every agent run, and generates the report's model-swap table from the blind grades
+  (paired bootstrap, seed from config). Its numbers match the ones above.
+- REPORT.md: a short "Model swap" section under Evaluation, one sentence in Reflection, and
+  deviation 5. Test split untouched; nothing else in the report changed.

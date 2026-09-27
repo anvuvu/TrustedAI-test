@@ -1,8 +1,9 @@
 """Report tables and figures, generated only from saved results (design §9.7, §10).
 
 Writes `eval/results/report_tables.md` and at most three figures in `eval/results/figures/`.
-For each kind of run the most recent results directory is used; its name is printed next to
-every table so each number can be traced back to a run.
+For each kind of run the most recent results directory is used (for the LLM runs, the most
+recent one made with the configured model); its name is printed next to every table so each
+number can be traced back to a run.
 """
 
 from __future__ import annotations
@@ -12,40 +13,55 @@ import re
 from pathlib import Path
 
 import matplotlib
+import numpy as np
 import pandas as pd
 import yaml
 
 from movie_agent.config import PROJECT_ROOT, Config
-from movie_agent.evaluation.results import fmt_ci
+from movie_agent.evaluation.results import fmt_ci, paired_bootstrap
 from movie_agent.evaluation.scenarios import RUBRIC_CRITERIA
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402  (backend must be set first)
 
 KINDS = ("offline_test", "offline_val", "search", "agent", "honesty")
+LLM_KINDS = ("agent", "honesty")
+GRADING_DIR = PROJECT_ROOT / "eval" / "grading"
 
 
-def latest_run(results_dir: Path, kind: str) -> Path | None:
-    """Most recent `<date>_<kind>[_n]` directory that has a metrics.json."""
+def latest_run(results_dir: Path, kind: str, model: str | None = None) -> Path | None:
+    """Most recent `<date>_<kind>[_n]` directory that has a metrics.json and, if `model` is
+    given, whose config snapshot used that LLM."""
     runs = [
         p
         for p in results_dir.glob(f"*_{kind}*")
         if (p / "metrics.json").exists()
         and p.name.split("_", 1)[1].rstrip("0123456789").rstrip("_") == kind
+        and (model is None or run_model(p) == model)
     ]
     return max(runs, key=lambda p: (p / "metrics.json").stat().st_mtime, default=None)
+
+
+def run_model(run: Path) -> str | None:
+    """The LLM recorded in a run's config snapshot, or None if there is no snapshot."""
+    snapshot = run / "config.yaml"
+    if not snapshot.exists():
+        return None
+    return (yaml.safe_load(snapshot.read_text()).get("agent") or {}).get("model")
 
 
 def run_report_tables(cfg: Config, report: Path | None = None) -> Path:
     """Write report_tables.md and the figures, and refresh the tables inside REPORT.md.
 
     In REPORT.md, the text between `<!-- table:NAME -->` and `<!-- /table:NAME -->` is replaced
-    by the generated section NAME (offline, search, agent, agent_runs, honesty), so the report's
-    tables always come from saved results.
+    by the generated section NAME (offline, search, agent, agent_runs, honesty, model_swap), so
+    the report's tables always come from saved results. The agent and honesty tables use runs
+    made with the configured model; `agent_runs` lists every run with its model.
     """
     results = cfg.paths.results_dir
-    runs = {k: latest_run(results, k) for k in KINDS}
-    agent = latest_graded_agent_run(results) or runs["agent"]
+    model = cfg.agent.model
+    runs = {k: latest_run(results, k, model if k in LLM_KINDS else None) for k in KINDS}
+    agent = latest_graded_agent_run(results, model) or runs["agent"]
     sections: dict[str, list[str]] = {}
     offline = runs["offline_test"] or runs["offline_val"]
     if offline:
@@ -63,6 +79,9 @@ def run_report_tables(cfg: Config, report: Path | None = None) -> Path:
         sections["agent_runs"] = _agent_runs_table(results)
     if runs["honesty"]:
         sections["honesty"] = _honesty_table(_load(runs["honesty"]), runs["honesty"])
+    swap = _model_swap_table(cfg, GRADING_DIR, results)
+    if swap:
+        sections["model_swap"] = swap
     lines = [
         "# Report tables",
         "",
@@ -80,12 +99,14 @@ def run_report_tables(cfg: Config, report: Path | None = None) -> Path:
     return out
 
 
-def latest_graded_agent_run(results: Path) -> Path | None:
-    """Most recent agent run whose rubric sheet has grades."""
+def latest_graded_agent_run(results: Path, model: str | None = None) -> Path | None:
+    """Most recent agent run whose rubric sheet has grades (made with `model`, if given)."""
     graded = [
         p
         for p in results.glob("*_agent*")
-        if (p / "rubric_sheet.csv").exists() and _rubric_means(p)[0] != "-"
+        if (p / "rubric_sheet.csv").exists()
+        and _rubric_means(p)[0] != "-"
+        and (model is None or run_model(p) == model)
     ]
     return max(graded, key=lambda p: (p / "metrics.json").stat().st_mtime, default=None)
 
@@ -191,7 +212,7 @@ def _search_table(m: dict, run: str) -> list[str]:
 
 
 def _agent_runs_table(results: Path) -> list[str]:
-    """Every saved agent run side by side: prompt changes and run-to-run variance."""
+    """Every saved agent run side by side: model and prompt changes, run-to-run variance."""
     runs = sorted(
         (p for p in results.glob("*_agent*") if (p / "metrics.json").exists()),
         key=lambda p: (p / "metrics.json").stat().st_mtime,
@@ -203,8 +224,8 @@ def _agent_runs_table(results: Path) -> list[str]:
         "",
         "Rubric columns are means (0–2) where the run was graded (by an LLM grader, see notes).",
         "",
-        "| Run | Prompt | Commit | " + " | ".join(header) + " |",
-        "|---|---|---|" + "---|" * len(header),
+        "| Run | Model | Prompt | Commit | " + " | ".join(header) + " |",
+        "|---|---|---|---|" + "---|" * len(header),
     ]
     for run in runs:
         m = _load(run)
@@ -212,7 +233,7 @@ def _agent_runs_table(results: Path) -> list[str]:
         values = [f"{m[k]:.2f}" if isinstance(m.get(k), float) else "-" for k in keys]
         values += _rubric_means(run)
         lines.append(
-            f"| `{run.name}` | {cfg['agent']['prompt_version']} | "
+            f"| `{run.name}` | {cfg['agent']['model']} | {cfg['agent']['prompt_version']} | "
             f"{m['meta']['git_commit']} | {' | '.join(values)} |"
         )
     return [*lines, ""]
@@ -354,3 +375,90 @@ def _figures(m: dict, out: Path) -> None:
     fig.tight_layout()
     fig.savefig(out / "popularity_ratio.png", dpi=150)
     plt.close(fig)
+
+
+def _model_swap_table(cfg: Config, grading: Path, results: Path) -> list[str]:
+    """Two LLMs on the same scenario turns, graded blind and paired (notes, gpt-5.1 trial).
+
+    Reads `rubric_grades_blind_with_rationale.csv` (one row per model and turn) and the two
+    agent runs it names; differences are other model minus the configured model, with a paired
+    bootstrap CI over turns. Returns [] if the grades or either run are missing.
+    """
+    path = grading / "rubric_grades_blind_with_rationale.csv"
+    if not path.exists():
+        return []
+    grades = pd.read_csv(path)
+    run_of = grades.groupby("model")["run"].first().to_dict()
+    base = cfg.agent.model
+    others = [m for m in run_of if m != base]
+    if (
+        base not in run_of
+        or len(others) != 1
+        or not all((results / r / "metrics.json").exists() for r in run_of.values())
+    ):
+        return []
+    other = others[0]
+    m = {k: _load(results / r) for k, r in run_of.items()}
+    lines = [
+        f"## Model swap on val: {other} vs {base} — `{run_of[other]}` vs `{run_of[base]}`",
+        "",
+        "Same prompt, code and scenarios; rubric graded blind and paired "
+        "(`eval/grading/rubric_grades_blind_with_rationale.csv`).",
+        "",
+        f"| Measure | {other} | {base} | Difference [95% CI] | Better / same / worse |",
+        "|---|---|---|---|---|",
+    ]
+    for key in (
+        "scenario_success",
+        "verifier_first_pass_rate",
+        "fallback_rate",
+        "tool_chain_accuracy",
+        "mean_tool_calls",
+        "p50_latency_ms",
+        "p95_latency_ms",
+    ):
+        lines.append(f"| {key} | {m[other][key]:.2f} | {m[base][key]:.2f} | - | - |")
+    wide = grades.pivot_table(index=["scenario", "turn"], columns="model", values=RUBRIC_CRITERIA)
+    rng = np.random.default_rng(cfg.seed)
+    for c in RUBRIC_CRITERIA:
+        a, b = wide[(c, other)].to_numpy(), wide[(c, base)].to_numpy()
+        d = a - b
+        ci = paired_bootstrap(a, b, cfg, rng)
+        lines.append(
+            f"| rubric {c} (0–2, {len(d)} turns) | {a.mean():.2f} | {b.mean():.2f} | "
+            f"{ci['mean']:+.2f} [{ci['lo']:+.2f}, {ci['hi']:+.2f}] | "
+            f"{int((d > 0).sum())} / {int((d == 0).sum())} / {int((d < 0).sum())} |"
+        )
+    lines += _blind_honesty_rows(grading, other, base)
+    return [*lines, ""]
+
+
+def _blind_honesty_rows(grading: Path, other: str, base: str) -> list[str]:
+    """Blind-graded perturbation and attribution counts per model, if those files exist."""
+    rows = []
+    pert = grading / "perturbation_grades_blind_with_rationale.csv"
+    att = grading / "attribution_grades_blind_with_rationale.csv"
+    if pert.exists():
+        p = pd.read_csv(pert)
+        p["extra"] = p["extra_facts"].fillna("none").astype(str).str.strip().str.lower() != "none"
+        stance, extra = {}, {}
+        for model, g in p.groupby("model"):
+            n = len(g)
+            stance[model] = f"{int((g['stance_follows_data'].str.lower() == 'yes').sum())} of {n}"
+            extra[model] = f"{int(g['extra'].sum())} of {n}"
+        rows.append(
+            f"| perturbation: stance follows the data | {stance[other]} | {stance[base]} | - | - |"
+        )
+        rows.append(
+            f"| perturbation: adds facts beyond tools | {extra[other]} | {extra[base]} | - | - |"
+        )
+    if att.exists():
+        a = pd.read_csv(att)
+        counts = {}
+        for model, g in a.groupby("model"):
+            v = g["reason_matches_driver"].str.lower()
+            counts[model] = " / ".join(str(int((v == k).sum())) for k in ("yes", "partly", "no"))
+        rows.append(
+            f"| attribution: yes / partly / no | {counts[other]} | {counts[base]} | - | - |"
+        )
+    return rows

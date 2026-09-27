@@ -1,0 +1,31 @@
+user_id,movie_id,title,driver,driver_movie_id,control_movie_id,driver_score_drop,driver_new_rank,driver_faithful,control_score_drop,control_new_rank,control_faithful
+51,296,Pulp Fiction (1994),cf,593,3274,0.306,29,True,0.018,1,False
+52,4011,Snatch (2000),cf,51255,79132,0.0165,1,False,-0.0015,2,False
+56,367,The Mask (1994),cf,364,380,0.045,2,False,0.013,1,False
+77,1291,Indiana Jones and the Last Crusade (1989),cf,1198,3578,0.1435,3,False,0.017,1,False
+111,318,The Shawshank Redemption (1994),cf,356,94478,0.0315,2,False,0.0,1,False
+119,4011,Snatch (2000),cf,2329,4446,0.0745,4,False,0.0005,1,False
+224,1196,Star Wars: Episode V - The Empire Strikes Back (1980),cf,260,1307,0.0145,3,False,0.0005,1,False
+245,296,Pulp Fiction (1994),cf,858,3106,0.5285,123,True,0.0235,1,False
+254,50,The Usual Suspects (1995),cf,318,858,0.0045,2,False,0.0045,2,False
+257,6,Heat (1995),cf,16,7,0.1605,15,True,0.0325,1,False
+271,1199,Brazil (1985),cf,924,1805,0.03,1,False,0.012,1,False
+301,318,The Shawshank Redemption (1994),cf,356,5989,0.0035,1,False,0.0,1,False
+307,1196,Star Wars: Episode V - The Empire Strikes Back (1980),cf,260,700,0.0245,3,False,0.0035,1,False
+312,1198,Raiders of the Lost Ark (Indiana Jones and the Raiders of the Lost Ark) (1981),cf,260,1644,0.0185,2,False,-0.003,1,False
+333,858,The Godfather (1972),cf,1193,924,0.1265,16,True,0.0005,1,False
+382,2329,American History X (1998),cf,2959,48598,0.0695,9,True,0.0005,1,False
+391,2329,American History X (1998),cf,2959,1265,0.0165,1,False,0.0035,1,False
+411,32,Twelve Monkeys (a.k.a. 12 Monkeys) (1995),cf,1,231,0.004,2,False,0.004,1,False
+427,5502,Signs (2002),cf,5445,1527,0.0075,1,False,-0.0,1,False
+437,296,Pulp Fiction (1994),cf,318,529,0.0135,1,False,0.001,1,False
+451,296,Pulp Fiction (1994),cf,608,733,0.205,24,True,-0.023,1,False
+453,1198,Raiders of the Lost Ark (Indiana Jones and the Raiders of the Lost Ark) (1981),cf,260,4167,0.015,3,False,0.004,1,False
+469,593,The Silence of the Lambs (1991),cf,296,1291,0.008,2,False,0.004,1,False
+473,2329,American History X (1998),cf,2959,318,0.051,1,False,0.1155,3,False
+501,296,Pulp Fiction (1994),cf,50,616,0.12,7,True,-0.01,1,False
+504,1784,As Good as It Gets (1997),cf,4306,3911,-0.0005,1,False,0.014,2,False
+560,318,The Shawshank Redemption (1994),cf,356,34048,0.0035,1,False,0.0,1,False
+578,2539,Analyze This (1999),cf,2496,613,0.644,235,True,-0.048,1,False
+599,555,True Romance (1993),cf,6,1476,0.0185,2,False,0.007,1,False
+610,2329,American History X (1998),cf,2959,59615,0.0185,1,False,0.0035,1,False

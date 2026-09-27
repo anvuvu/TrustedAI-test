@@ -126,14 +126,18 @@ def test_honesty_engine_part_and_perturbation(cfg, ds, embedder):
     assert fidelity["n_pairs"] == 6
 
 
-def test_report_tables_from_saved_results(cfg, ds, embedder):
+def test_report_tables_from_saved_results(cfg, ds, embedder, tmp_path):
     run_offline(cfg, ds, "val", embedder=embedder)
     run_honesty(cfg, ds, None, embedder)
     assert latest_run(cfg.paths.results_dir, "offline_val") is not None
-    out = run_report_tables(cfg)
+    # a temporary report: the real REPORT.md must never receive fixture tables
+    report = tmp_path / "REPORT.md"
+    report.write_text("<!-- table:offline -->\nold\n<!-- /table:offline -->\n")
+    out = run_report_tables(cfg, report=report)
     text = out.read_text()
     assert "## Offline ranking" in text and "## Honesty tests" in text
     assert (cfg.paths.results_dir / "figures" / "accuracy_by_system.png").exists()
+    assert "old" not in report.read_text() and "| EASE |" in report.read_text()
 
 
 def test_search_score_is_nan_not_zero_when_ungraded(cfg):
@@ -171,3 +175,67 @@ def test_refresh_report_replaces_only_marked_blocks():
     out = refresh_report(text, {"x": ["## Title `run`", "", "| a |", "|---|"]})
     assert "old\n<!-- /table:x" not in out and "*Source: Title `run`*" in out and "| a |" in out
     assert "<!-- table:y -->old<!-- /table:y -->" in out and out.startswith("Intro")
+
+
+def test_agent_runs_table_names_the_model_of_each_run(tmp_path):
+    from movie_agent.evaluation.report_tables import _agent_runs_table
+
+    for name, model in (("2026-01-01_agent", "model-a"), ("2026-01-02_agent", "model-b")):
+        _fake_agent_run(tmp_path, name, model, verifier_first_pass_rate=0.5)
+    rows = [line for line in _agent_runs_table(tmp_path) if line.startswith("| `")]
+    assert [line.split(" | ")[1] for line in rows] == ["model-a", "model-b"]
+
+
+def _fake_agent_run(results, name, model, **metrics):
+    import yaml
+
+    run = results / name
+    run.mkdir(parents=True)
+    (run / "metrics.json").write_text(json.dumps({"meta": {"git_commit": "abc"}, **metrics}))
+    agent = {"model": model, "prompt_version": "system_v2"}
+    (run / "config.yaml").write_text(yaml.safe_dump({"agent": agent}))
+    return run
+
+
+def test_latest_llm_run_is_chosen_for_the_configured_model(tmp_path):
+    base = _fake_agent_run(tmp_path, "2026-01-01_agent", "model-a")
+    _fake_agent_run(tmp_path, "2026-01-02_agent", "model-b")
+    assert latest_run(tmp_path, "agent", "model-a") == base
+    assert latest_run(tmp_path, "agent").name == "2026-01-02_agent"
+
+
+def test_model_swap_table_pairs_turns_and_signs_the_difference(cfg, tmp_path):
+    from movie_agent.evaluation.report_tables import _model_swap_table
+
+    keys = dict.fromkeys(
+        [
+            "scenario_success",
+            "verifier_first_pass_rate",
+            "fallback_rate",
+            "tool_chain_accuracy",
+            "mean_tool_calls",
+            "p50_latency_ms",
+            "p95_latency_ms",
+        ],
+        0.5,
+    )
+    results, grading = tmp_path / "results", tmp_path / "grading"
+    _fake_agent_run(results, "2026-01-01_agent", cfg.agent.model, **keys)
+    _fake_agent_run(results, "2026-01-02_agent", "other-model", **keys)
+    grading.mkdir()
+    rows = []
+    for turn, (mine, theirs) in enumerate([(2, 1), (2, 2), (1, 0)], start=1):
+        for run, model, g in (
+            ("2026-01-01_agent", cfg.agent.model, mine),
+            ("2026-01-02_agent", "other-model", theirs),
+        ):
+            rows.append(
+                {"run": run, "model": model, "scenario": "s", "turn": turn, "grounded": g}
+                | {"relevant": 2, "specific": 2, "honest": 2}
+            )
+    pd.DataFrame(rows).to_csv(grading / "rubric_grades_blind_with_rationale.csv", index=False)
+    table = "\n".join(_model_swap_table(cfg, grading, results))
+    assert "other-model vs " + cfg.agent.model in table
+    grounded = next(line for line in table.splitlines() if "rubric grounded" in line)
+    assert "| 1.00 | 1.67 | -0.67" in grounded and "0 / 1 / 2" in grounded
+    assert _model_swap_table(cfg, grading, tmp_path / "empty") == []
