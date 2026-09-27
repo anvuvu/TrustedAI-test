@@ -504,3 +504,19 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
   narrowed to the gpt-4.1-mini runs: "tool choice was right in every turn of every run" (agent_6 has
   tool-chain accuracy 0.97) and "every verifier rejection in the final runs was a typed title"
   (agent_6 also has V3 rejections).
+
+## 2026-09-27 — CLI bug: Vietnamese input crashed `chat`
+
+25. **CLI bug: a half-deleted character crashed the turn.** The author typed "tìm cho tôi phim về
+    giáng sinh" in `movie-agent chat --user 15`. The turn crashed inside the OpenAI client with
+    `UnicodeEncodeError: 'utf-8' codec can't encode character '\udcc3' ... surrogates not allowed`,
+    before any trace was written. Cause: `chat` read with a bare `input()` (no `readline`), so the
+    terminal handled backspace, and without `iutf8` it removes one byte. A backspace (typed, or sent
+    by a Telex input method replacing "ê" with "ề") left the lead byte `C3` of "ê" behind. Under
+    `LC_CTYPE=UTF-8`, Python decodes stdin with `surrogateescape`, so the stray byte became
+    `'\udcc3'`. It stayed in the message history and broke JSON encoding of the request.
+    Reproduced with `printf 'v\xc3\xe1\xbb\x81\n' | python -c "print(repr(input()))"`, which gives
+    `'v\udcc3ề'`. No root-cause code from §8.3 applies: the agent never saw the message. Fix:
+    `cli._read_message` drops undecodable bytes, which restores the intended "về";
+    `test_chat_input_drops_bytes_left_by_a_partial_backspace` covers it. Evaluation runs pass
+    scripted strings and never went through this path, so no result changes.

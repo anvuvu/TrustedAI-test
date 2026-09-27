@@ -40,6 +40,17 @@ def _llm_factory(cfg: Config) -> Callable[[], LLMClient]:
     return lambda: OpenAIClient(cfg.agent)
 
 
+def _read_message(prompt: str) -> str:
+    """Read one chat line, dropping stray bytes of a half-deleted character.
+
+    Under a UTF-8 locale Python decodes stdin with `surrogateescape`, so a byte left behind when
+    the terminal's backspace removed only part of a multibyte character (e.g. Vietnamese "ê")
+    arrives as a lone surrogate, which the OpenAI client cannot encode.
+    """
+    raw = input(prompt)
+    return raw.encode("utf-8", "surrogateescape").decode("utf-8", "ignore").strip()
+
+
 @app.command()
 def validate(config: Path | None = ConfigOpt) -> None:
     """Validate the dataset and write eval/results/data_report.json (design §4.1)."""
@@ -108,7 +119,7 @@ def chat(
     )
     while True:
         try:
-            message = input("\nyou> ").strip()
+            message = _read_message("\nyou> ")
         except (EOFError, KeyboardInterrupt):
             break
         if message.lower() in {"", "exit", "quit"}:
