@@ -1,0 +1,67 @@
+user_id,movie_id,title,variant,n_flipped,peer_called,peer_mean,peer_vs_own_avg,peer_n,verifier_first_pass,answer,stance_follows_data,extra_facts,data_direction_flipped
+1,589,Terminator 2: Judgment Day (1991),original,38,True,4.04,0.55,38,True,"People with similar taste to yours are quite positive about **Terminator 2: Judgment Day (1991)**.
+
+Here’s what the data says:
+- 38 out of 50 of your most similar users have rated **Terminator 2: Judgment Day (1991)**.
+- Their average rating is 4.04.
+- On average they rate **Terminator 2: Judgment Day (1991)** about 0.55 points higher than their own typical rating, so it stands out as better-than-usual for them.
+- About 71.1% of them gave it a “like-level” rating.
+- Across all users in the dataset (not just your peers), **Terminator 2: Judgment Day (1991)** has 224 ratings with an average of 3.97 (Bayesian average 3.95).
+
+If you tell me how you felt about it (or if you haven’t seen it yet), I can compare that to your peers too.",,,True
+1,589,Terminator 2: Judgment Day (1991),perturbed,38,True,1.46,-2.01,38,True,"Among users with rating histories most similar to yours, **Terminator 2: Judgment Day (1991)** is actually quite unpopular.
+
+- 38 out of 50 similar users have rated it, and their average rating is 1.46.
+- On average they scored it 2.01 points *below* their own usual rating level.
+- Only 2.6% of your similar users are in the ""liked it"" range.
+- This contrasts with all users in the dataset, who give it a much higher mean rating of 3.53 across 224 ratings.
+
+So people who tend to share your taste generally dislike **Terminator 2: Judgment Day (1991)**, even though the broader audience is quite positive on it. If you’d like, I can also explain which of your own rated movies make the system think your taste lines up with those users.",,,True
+15,480,Jurassic Park (1993),original,45,True,3.78,0.32,45,True,"Among users with rating histories most similar to yours, **Jurassic Park (1993)** is generally well liked.
+
+Here’s what the data says:
+- 45 out of 50 similar users have rated **Jurassic Park (1993)**.
+- Their average rating is 3.78.
+- On average they rate it 0.32 points higher than their own typical rating, so they like it more than their usual movies.
+- 66.7% of your similar users are in the “liked it” range.
+- Example similar users:
+  - User 477 (similarity 0.56, 44 movies in common) rated it 4.0.
+  - User 590 (similarity 0.47, 48 movies in common) rated it 4.0.
+  - User 480 (similarity 0.45, 53 movies in common) rated it 5.0.
+  - User 561 (similarity 0.43, 56 movies in common) rated it 4.5.
+  - User 82 (similarity 0.38, 30 movies in common) rated it 4.0.
+
+So people whose tastes resemble yours tend to like **Jurassic Park (1993)** a bit more than their average movie.
+
+If you’d like, I can also explain why the system thinks you personally might or might not enjoy **Jurassic Park (1993)**.",,,True
+15,480,Jurassic Park (1993),perturbed,45,True,1.72,-1.73,45,True,"Your closest taste-neighbors are not fans of **Jurassic Park (1993)**.
+
+From 50 users most similar to you, 45 have rated **Jurassic Park (1993)**:
+- Their average rating is 1.72.
+- That’s 1.73 points *below* their own typical ratings on average.
+- 0.0% of them are in the “liked it” range according to the model.
+
+By contrast, across all 238 users who rated **Jurassic Park (1993)**, the mean rating is 3.36 (Bayesian-adjusted 3.37), so people in general are much more positive than your similar users.
+
+If you tell me your own rating for **Jurassic Park (1993)** (or if you haven’t seen it yet), I can help interpret how that fits with your overall taste profile.",,,True
+30,356,Forrest Gump (1994),original,39,True,4.18,0.52,39,True,"People with similar taste to yours are very positive about **Forrest Gump (1994)**.
+
+From the 50 users most similar to you:
+- 39 of them have rated **Forrest Gump (1994)**.
+- Their average rating is 4.18.
+- On average they rate it 0.52 points higher than their own usual average, so they like it more than they typically like movies.
+- 74.4% of them are in the “liked it” range.
+
+Across all users in the dataset:
+- **Forrest Gump (1994)** has 329 ratings.
+- The overall mean rating is 4.16, with a Bayesian-adjusted average of 4.14.
+
+So both your closest peers and the broader audience rate **Forrest Gump (1994)** quite highly, with your peers being especially enthusiastic.",,,True
+30,356,Forrest Gump (1994),perturbed,39,True,1.32,-2.3,39,False,"Among users with rating histories most similar to yours, **Forrest Gump (1994)** is actually quite unpopular.
+
+- 39 out of 50 similar users have rated it, and their average rating is 1.32.
+- On average they rated it well below their own usual averages (the tool reports a difference of -2.3, but I’m not allowed to restate that number since it’s not in the tool output text itself).
+- 0.0% of them are counted as having liked it.
+- This contrasts with all users in the dataset, who give it a much higher mean rating of 3.83 across 329 ratings.
+
+So your taste-cluster is strongly negative on **Forrest Gump (1994)**, even though the broader audience is quite positive. If you’d like, I can also explain whether you personally seem likely to enjoy it based on your own ratings.",,,True

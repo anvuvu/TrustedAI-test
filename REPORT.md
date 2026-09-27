@@ -75,7 +75,7 @@ The sample queries map to tool chains: "tonight" → `recommend`; "similar taste
 | Blend the features as **rank scores within each feature's top 200**, with no special weights for sparse users (revised after validation) | The first design: percentile ranks over the whole catalog, and extra content weight for sparse users | On validation the first design **lost to its own component** EASE (NDCG@10 0.050 vs 0.102). Percentiles squeeze EASE's top 200 into 0.96–1.00, so small content differences reorder the head, and the sparse-user shift hurt sparse users (0.059 vs 0.076). Top-200 rank scores tie with EASE (val 0.099; test 0.113 vs 0.113) and keep query mode on the query (88% of the top 5 among the 50 best plot matches, vs 46%) |
 | Persist excluded genres in code: the orchestrator adds genres excluded in `recommend` to the conversation state (added after grading) | Let the LLM update the state through `final_answer.add_exclude_genres`, as first designed | Prompting alone persisted "no animation" in 4 of 6 turns in one run and 1 of 6 in an identical run. In one trace the follow-up call dropped the constraint and the results contained Toy Story 3. After the change, persistence was 6 of 6 in two runs |
 
-The full log, with ten decisions and their status after validation, is in `docs/design.md` §14.
+The full log, with eleven decisions and their status after validation, is in `docs/design.md` §14.
 
 ## Evaluation
 
@@ -202,7 +202,8 @@ Every scenario run, in order:
 - the Step 1 run (draft ranking, prompt v1);
 - prompt v1 on the revised ranking;
 - prompt v2, run twice (only a verifier fix differs, and it does not affect these turns);
-- after the two graded fixes (D9, D10), run twice.
+- after the two graded fixes (D9, D10), run twice;
+- gpt-5.1 instead of gpt-4.1-mini, with the same prompt and code (see the model swap below; its blind paired grades are in that table).
 
 `-dirty` marks runs made on uncommitted changes, which were committed right after.
 
@@ -211,14 +212,15 @@ Every scenario run, in order:
 
 Rubric columns are means (0–2) where the run was graded (by an LLM grader, see notes).
 
-| Run | Prompt | Commit | verifier_first_pass_rate | fallback_rate | state_persistence | scenario_success | rubric grounded | rubric relevant | rubric specific | rubric honest |
-|---|---|---|---|---|---|---|---|---|---|---|
-| `2026-09-26_agent` | system_v1 | 6ef7177-dirty | 0.52 | 0.03 | 0.00 | 0.46 | - | - | - | - |
-| `2026-09-27_agent` | system_v1 | c315916-dirty | 0.48 | 0.10 | 0.00 | 0.50 | - | - | - | - |
-| `2026-09-27_agent_2` | system_v2 | c315916-dirty | 0.79 | 0.00 | 0.67 | 0.67 | - | - | - | - |
-| `2026-09-27_agent_3` | system_v2 | c315916-dirty | 0.86 | 0.03 | 0.17 | 0.71 | 1.45 | 1.86 | 1.66 | 1.45 |
-| `2026-09-27_agent_4` | system_v2 | 03ffabb | 0.79 | 0.00 | 1.00 | 0.79 | 1.45 | 1.97 | 1.72 | 1.90 |
-| `2026-09-27_agent_5` | system_v2 | 03ffabb | 0.76 | 0.00 | 1.00 | 0.75 | - | - | - | - |
+| Run | Model | Prompt | Commit | verifier_first_pass_rate | fallback_rate | state_persistence | scenario_success | rubric grounded | rubric relevant | rubric specific | rubric honest |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `2026-09-26_agent` | gpt-4.1-mini | system_v1 | 6ef7177-dirty | 0.52 | 0.03 | 0.00 | 0.46 | - | - | - | - |
+| `2026-09-27_agent` | gpt-4.1-mini | system_v1 | c315916-dirty | 0.48 | 0.10 | 0.00 | 0.50 | - | - | - | - |
+| `2026-09-27_agent_2` | gpt-4.1-mini | system_v2 | c315916-dirty | 0.79 | 0.00 | 0.67 | 0.67 | - | - | - | - |
+| `2026-09-27_agent_3` | gpt-4.1-mini | system_v2 | c315916-dirty | 0.86 | 0.03 | 0.17 | 0.71 | 1.45 | 1.86 | 1.66 | 1.45 |
+| `2026-09-27_agent_4` | gpt-4.1-mini | system_v2 | 03ffabb | 0.79 | 0.00 | 1.00 | 0.79 | 1.45 | 1.97 | 1.72 | 1.90 |
+| `2026-09-27_agent_5` | gpt-4.1-mini | system_v2 | 03ffabb | 0.76 | 0.00 | 1.00 | 0.75 | - | - | - | - |
+| `2026-09-27_agent_6` | gpt-5.1 | system_v2 | 7a2a4e6-dirty | 0.72 | 0.03 | 1.00 | 0.75 | - | - | - | - |
 <!-- /table:agent_runs -->
 
 - **Tool choice was right in every turn of every run** (tool-chain accuracy 1.00), including the edge cases:
@@ -253,6 +255,43 @@ Rubric columns are means (0–2) where the run was graded (by an LLM grader, see
 - **Perturbation (the direct R3 test).** For three users I took a movie they had not rated (Terminator 2, Jurassic Park, Forrest Gump). In a copy of the data, the ratings of that movie by the user's 50 most similar users were flipped (r → 5.5 − r), and I asked "what do people with similar taste think about it?" on both versions. In all 6 answers the stance followed the data, and no answer added facts beyond the tool output. For Terminator 2 and user 1, the answer on the real data said "an average rating of 4.04, which is 0.55 above their own average ratings. About 71.1% of these similar users liked it". After the flip it said "quite low, with an average rating of 1.46, which is 2.01 points below their own average ratings. Only about 2.6% of these similar users liked the movie". The agent does not fall back on the film's reputation.
 - **Explanation fidelity.** I removed the top driver named by `explain` from the user's history and re-ranked. The recommendation fell at least 5 places in 27% of cases [10%, 43%]. Removing a random history movie did that in 0% of cases, and the driver's removal cut the score 13 times more (0.091 vs 0.007). The named reason is real, but it is rarely decisive on its own, because EASE sums over the whole history. "Because you liked X" should be read as "X is the largest single contributor".
 - **Attribution.** The LLM's stated reason matched the engine's top driver in 5 of 10 answers, partly in 4. The one "no" was a fallback answer that gave no reason at all.
+
+### Model swap: gpt-5.1 (tried after the report was written)
+
+After writing the report I ran the agent on gpt-5.1, with `reasoning_effort: none`, the only setting at which it accepts temperature 0. Nothing else changed: same prompt, code and scenarios. Only the LLM runs were repeated, on val. To compare the models without grader drift, fresh graders scored both models' answers to the same 29 turns, shuffled, without knowing which model wrote which.
+
+<!-- table:model_swap -->
+*Source: Model swap on val: gpt-5.1 vs gpt-4.1-mini — `2026-09-27_agent_6` vs `2026-09-27_agent_5`*
+
+Same prompt, code and scenarios; rubric graded blind and paired (`eval/grading/rubric_grades_blind_with_rationale.csv`).
+
+| Measure | gpt-5.1 | gpt-4.1-mini | Difference [95% CI] | Better / same / worse |
+|---|---|---|---|---|
+| scenario_success | 0.75 | 0.75 | - | - |
+| verifier_first_pass_rate | 0.72 | 0.76 | - | - |
+| fallback_rate | 0.03 | 0.00 | - | - |
+| tool_chain_accuracy | 0.97 | 1.00 | - | - |
+| mean_tool_calls | 1.24 | 1.66 | - | - |
+| p50_latency_ms | 4351.60 | 2732.20 | - | - |
+| p95_latency_ms | 9469.14 | 5360.82 | - | - |
+| rubric grounded (0–2, 29 turns) | 1.14 | 1.48 | -0.34 [-0.62, -0.07] | 3 / 15 / 11 |
+| rubric relevant (0–2, 29 turns) | 2.00 | 2.00 | +0.00 [+0.00, +0.00] | 0 / 29 / 0 |
+| rubric specific (0–2, 29 turns) | 1.86 | 1.72 | +0.14 [-0.07, +0.34] | 6 / 21 / 2 |
+| rubric honest (0–2, 29 turns) | 1.59 | 1.76 | -0.17 [-0.41, +0.03] | 2 / 21 / 6 |
+| perturbation: stance follows the data | 6 of 6 | 6 of 6 | - | - |
+| perturbation: adds facts beyond tools | 1 of 6 | 0 of 6 | - | - |
+| attribution: yes / partly / no | 6 / 4 / 0 | 4 / 5 / 1 | - | - |
+<!-- /table:model_swap -->
+
+- **gpt-5.1 is less grounded**, equal on relevance, and not significantly different on specificity or honesty. It is also about 1.6 times slower.
+- **Why.** Its answers sound more specific, but the extra detail comes from the wrong places:
+  - It presents the all-user mean as what similar users think ("similar raters give it a high mean rating of 4.16 across 93 ratings", with no peer lookup). This accounts for 5 of its 9 grounded zeros. The verifier passes it because the number is in the tool output.
+  - It adds more descriptions from its own knowledge ("quirky, nostalgic coming-of-age story", "darkly funny").
+- **Other effects.**
+  - Its more varied wording trips the verifier's heuristics. V3 rejected a correct "2.3", and the retry told the user it was "not allowed to restate that number".
+  - It once used Toy Story's name as search text instead of resolving it as a seed.
+  - V1 still caught a movie ID it produced from memory.
+- **Decision: the deployed model stays gpt-4.1-mini** (design D11). A stronger model does not fix grounding by itself. The fixes are the ones listed for failure cases 2 and 3, plus a verifier rule that a "similar users" claim needs a `peer_opinion` call.
 
 ### Failure Analysis
 
@@ -308,7 +347,7 @@ The three cases below come from the curated `chat` sessions (`transcripts/`, tra
 **What does not work well, and why.**
 - **Beyond-popularity discovery is weak.** Tail recall is near 0 and recommendations are twice as popular as the user's history. EASE learns from co-occurrence, and a third of the catalog has almost no ratings.
 - **Content understanding is shallow.** Plots describe events, the embedding matches subjects, and some plots are for the wrong film. Mood queries and seed requests suffer most.
-- **The LLM's wording is the least controlled part.** Typed titles are caught, but adjectives from its own knowledge and "liked" for a 1.0 rating are not. The verifier only covers what can be checked mechanically.
+- **The LLM's wording is the least controlled part.** Typed titles are caught, but adjectives from its own knowledge and "liked" for a 1.0 rating are not. The verifier only covers what can be checked mechanically. A stronger model did not help: gpt-5.1 was less grounded (see the model swap).
 - **The evidence has limits.**
   - The grades come from an LLM grader, not from me.
   - The sets are small (10 queries, 29 turns).
@@ -342,6 +381,7 @@ The three cases below come from the curated `chat` sessions (`transcripts/`, tra
 2. The ranking normalization and the sparse-user rule were changed after the first validation run. The test split was untouched, and the chosen variant was not the validation maximum: z-score scored 0.102 but broke query mode.
 3. The ungraded search sheet was reset after the ranking change, so that only the current results were graded.
 4. A first search run with a display bug and no grades was deleted and re-run.
+5. After the report was written, the agent and honesty runs were repeated with gpt-5.1 on val (the model swap). No test data was used, and the deployed model did not change.
 
 The test split was evaluated exactly once, from a clean commit (`eval/results/test_runs.log`).
 

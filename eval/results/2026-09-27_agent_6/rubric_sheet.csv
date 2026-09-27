@@ -1,0 +1,253 @@
+scenario,turn,user,answer,grounded,relevant,specific,honest
+tonight_u1,1,What should I watch tonight?,"Here are a few strong picks based on your tastes:
+
+1. **Snatch (2000)** – Very strong match to your highly rated gritty crime movies; similar raters to you give it a high mean rating of 4.16 across 93 ratings.
+2. **The Shawshank Redemption (1994)** – Extremely well‑liked overall (4.43 mean from 317 ratings, one of the highest in the dataset) and recommended because you enjoyed intense dramas like **Forrest Gump (1994)** and **Pulp Fiction (1994)**.
+3. **The Godfather (1972)** – Top‑tier crime drama with a 4.29 mean from 192 ratings; users who loved **Goodfellas (1990)** and **The Usual Suspects (1995)** (like you did) tend to rate this very highly.
+4. **The Godfather: Part II (1974)** – Another highly rated crime drama (4.26 mean from 129 ratings) pushed up by your 5.0 ratings for **The Usual Suspects (1995)** and **Goodfellas (1990)**.
+5. **Terminator 2: Judgment Day (1991)** – High‑energy action/sci‑fi with a strong collaborative signal from your love of **The Terminator (1984)** and **Jurassic Park (1993)**; 3.97 mean from 224 ratings.
+
+If you tell me what mood you’re in (light/funny, dark/serious, action‑heavy, etc.), I can narrow this down to the best one for tonight.",,,,
+dark_thriller_u1,1,I want a dark psychological thriller with a twist,"Here are some dark psychological thrillers with twisty elements that fit what you asked for:
+
+1. **Memento (2000)** – Strong match to your “dark psychological thriller with a twist” query, highly rated (mean rating 4.12 from 159 ratings), and boosted because you loved **Fight Club (1999)**.
+2. **Twelve Monkeys (a.k.a. 12 Monkeys) (1995)** – Blends mystery, sci‑fi, and thriller; it scores well on your query and is very well liked by users similar to you.
+3. **Donnie Darko (2001)** – Very strong match to the “dark, psychological, twisty” vibe in the plot features, and people rate it highly (mean 3.98 from 109 ratings).
+4. **Notorious (1946)** – Classic thriller with noir and romantic elements; it matches your query strongly and has a high mean rating of 4.25.
+5. **Dark City (1998)** – Extremely strong query match for dark, twisty thriller elements, with a moody film‑noir/sci‑fi blend.
+
+If you want, I can explain in more detail why you personally are likely to enjoy any one of these.",,,,
+peers_pulp_fiction_u1,1,What do people with similar taste to mine think about Pulp Fiction?,"Among users whose overall taste is most similar to yours, **Pulp Fiction (1994)** is very well liked.
+
+From the 50 most similar users to you:
+- 41 of them have rated **Pulp Fiction (1994)**.
+- Their average rating is 4.33.
+- On average, they rate **Pulp Fiction (1994)** about 0.83 points higher than their own usual average rating, so it stands out as a favorite.
+- About 85.4% of them gave it a positive rating.
+
+For comparison with everyone in the dataset:
+- All users together give **Pulp Fiction (1994)** an average rating of 4.2 across 307 ratings (Bayesian-adjusted average 4.17).
+
+You personally rated **Pulp Fiction (1994)** 3.0, so your similar peers generally like it quite a bit more than you do.
+
+If you’d like, I can show you other movies that these similar users love which you haven’t seen yet.",,,,
+why_that_u1,1,Recommend one movie for tonight.,"I recommend **Snatch (2000)** for tonight.
+
+It’s a top personal match for you: similar users and your own high ratings for movies like **American History X (1998)** and **Reservoir Dogs (1992)** strongly boost it, and it has a high mean rating of 4.16 from 93 ratings.
+
+If you’d like, I can explain in more detail why it fits your tastes or suggest an alternative in a different mood.",,,,
+why_that_u1,2,Why do you think I'd like that?,"You’re a strong match for **Snatch (2000)** based on both your own history and similar users.
+
+Here’s what the data says:
+
+- Your top match overall: **Snatch (2000)** is ranked #1 personally for you among all unseen movies.
+- Very similar to movies you loved: its plot is highly similar to movies you rated 5.0 like **Go (1999)** and **Bottle Rocket (1996)**, and it’s also connected to intense crime/drama titles you gave 5.0 such as **American History X (1998)** and **Reservoir Dogs (1992)**.
+- Strong approval from people like you: 22 of your most similar users rated it, giving it an average of 4.18, which is 0.71 above their own usual averages. The system marks this as high confidence.
+- Generally well liked: it has 93 ratings with a mean of 4.16 and a strong overall quality score.
+
+If you tell me what mood you’re in (lighter, darker, more action, more comedy, etc.), I can suggest an alternative to **Snatch (2000)** in that direction.",,,,
+toy_story_no_animation_u1,1,I liked Toy Story but I'm tired of animated movies — what else?,"Here are some non-animated options that people with your tastes tend to enjoy after liking **Toy Story (1995)**:
+
+1. **Gremlins (1984)** – Comedy with a mischievous-creatures vibe; it’s recommended based on similarity to movies you rated like **Superman (1978)** and **RoboCop (1987)**.
+2. **Babe (1995)** – Warm, family-friendly children’s drama; strongly boosted because you rated **Toy Story (1995)** and **The Fugitive (1993)** highly.
+3. **Snatch (2000)** – Highly rated crime-comedy-thriller; similar-users and overall quality both push it up, helped by your 5.0 ratings on movies like **American History X (1998)** and **Reservoir Dogs (1992)**.
+4. **The Santa Clause (1994)** – Light fantasy-comedy; its tone and themes line up with other fun movies you’ve liked such as **The Mask (1994)** and **Stargate (1994)**.
+5. **Santa Claus: The Movie (1985)** – Adventure/fantasy with a children’s focus; it’s suggested from your history, but note the system has low confidence because it only has 4 ratings.
+
+If you tell me what mood you’re in (more comedy vs more action vs something darker), I can narrow this down or find a few closer matches.",,,,
+blind_spot_u1,1,What's my blind spot? What genres am I missing?,"Looking at your profile in this dataset, your main blind spot is:
+
+- **Documentary** – you have 0 ratings here, while they make up 0.5% of all users’ ratings. Similar users to you even show a slightly positive affinity for this genre (0.1), so there may be some documentaries you’d enjoy that you just haven’t tried or rated yet.
+
+By contrast, **Horror** isn’t a blind spot but an *avoided* genre: you’ve rated 13 horror movies and your affinity is -0.77, meaning you tend to like them much less than your usual movies.
+
+If you’d like, I can suggest a few well-rated documentaries to start exploring that blind spot.",,,,
+tonight_u15,1,What should I watch tonight?,"Here are a few strong picks for you tonight:
+
+1. **Blade Runner (1982)** – Very high match with your taste in sci‑fi and thrillers; similar‑minded users rate it about 4.1 on average (124 ratings).
+2. **The Silence of the Lambs (1991)** – Top recommendation based on how you rated intense crime dramas; similar users give it a 4.16 average over 279 ratings.
+3. **Braveheart (1995)** – Lines up with your liking for epic action and war stories; it has a 4.03 mean rating from 237 ratings.
+4. **Inglourious Basterds (2009)** – War/action drama that users similar to you rate highly (mean 4.14 from 88 ratings).
+5. **Good Will Hunting (1997)** – Character‑driven drama/romance with a strong 4.08 mean rating from 141 ratings.
+
+If you tell me what mood you’re in (e.g., darker thriller vs. something more emotional), I can narrow this down further or explain why one of these is an especially good fit tonight.",,,,
+dark_thriller_u15,1,I want a dark psychological thriller with a twist,"Here are some dark psychological thrillers with twisty elements that fit what you asked for:
+
+1. **Donnie Darko (2001)** – Strong match to your “dark psychological, twisty” query, with high similarity to movies you’ve liked such as **Requiem for a Dream (2000)**, and it’s well rated (mean rating 3.98 from 109 ratings).
+2. **Psycho (1960)** – Very strong query match for a tense, psychologically driven story with a twist; it’s also highly rated overall (mean rating 4.04 from 83 ratings).
+3. **Twelve Monkeys (a.k.a. 12 Monkeys) (1995)** – Blends mystery, sci‑fi and thriller elements with a mind‑bending plot; similar users rate it well (mean rating 3.98 from 177 ratings) and it aligns with your tastes.
+4. **Color of Night (1994)** – High match to your query for a dark, psychological thriller; its plot centers on damaged characters and secrets revealed over time.
+5. **Darkness Falls (2003)** – Very strong textual match to your request, but note the system has **low confidence** here because it only has 4 ratings and they’re quite low (mean rating 2.12), so treat this one as more of a long‑shot.
+
+If you’d like, I can explain in more detail why you might like any one of these, or narrow this down (for example, less horror, more mystery, etc.).",,,,
+peers_pulp_fiction_u15,1,What do people with similar taste to mine think about Pulp Fiction?,"People whose taste is most similar to yours are very positive about **Pulp Fiction (1994)**.
+
+From the data:
+- 50 similar users were analyzed, and 43 of them have rated **Pulp Fiction (1994)**.
+- Their average rating is 4.48, which is 1.02 points higher than their own typical rating on other movies, so they like it much more than their usual.
+- About 90.7% of your similar users are in the “liked it” range for **Pulp Fiction (1994)**.
+- A few examples: users with similarity scores between 0.37 and 0.56 to you, sharing 44–62 movies in common, rated it between 4.0 and 5.0.
+- Your own rating for **Pulp Fiction (1994)** is 4.0 in this dataset.
+
+So among people who rate movies like you do, **Pulp Fiction (1994)** is not just well liked, it stands out as significantly above their normal standards.
+
+If you’d like, I can also explain *why* the system thinks you (specifically) are a good match for **Pulp Fiction (1994)** based on your history.",,,,
+why_that_u15,1,Recommend one movie for tonight.,"I recommend **Blade Runner (1982)** for tonight.
+
+It’s a strong match for your tastes based on similar users’ ratings (high collaborative score) and your love for movies like **Alien (1979)** and **Star Wars: Episode V - The Empire Strikes Back (1980)**. If you’d like, I can suggest alternatives with a different mood (less intense, more dramatic, etc.).",,,,
+why_that_u15,2,Why do you think I'd like that?,"You’re a strong match for **Blade Runner (1982)** based on several signals in your rating history:
+
+- Your top-rated movies like **Alien (1979)** (5.0), **Star Wars: Episode V - The Empire Strikes Back (1980)** (5.0), and **The Terminator (1984)** (4.0) pushed it to rank 1 personally for you, especially **Alien (1979)**.
+- It’s a well-regarded movie overall in the dataset, with 124 ratings and a mean rating of 4.1 (Bayesian average 4.06).
+- Users most similar to you really like it: 29 similar users rated it, giving it an average of 4.07, which is 0.62 above their own usual averages (high confidence).
+- Plot-wise, it’s close to movies you’ve enjoyed such as **Prometheus (2012)** (similarity 0.77) and **Total Recall (1990)** (similarity 0.77), and you tend to rate Sci-Fi above your own average (affinity 0.21).
+
+If you tell me what mood you’re in tonight (lighter, darker, more action, more drama), I can suggest a different movie tailored to that.",,,,
+toy_story_no_animation_u15,1,I liked Toy Story but I'm tired of animated movies — what else?,"Here are some non-animated options that the system thinks are closest in feel to what you liked:
+
+1. **Cinema Paradiso (Nuovo cinema Paradiso) (1989)** – Strong match to your query, very well rated overall (bayes_avg 4.01 from 34 ratings), and it lines up with your taste in thoughtful dramas like **American Beauty (1999)** and **A.I. Artificial Intelligence (2001)**.
+2. **Babes in Toyland (1961)** – Light, kid-focused fantasy/musical with a toyland setting; high query match and not animated.
+3. **Epic Movie (2007)** – Parody-style adventure/comedy that matches the playful tone you asked for, but note: it has a very low mean rating (1.12 from 4 ratings) and the system flags it as low-confidence.
+4. **Chitty Chitty Bang Bang (1968)** – Family adventure/comedy with an imaginative, toy-like car and kids at the center; strong query match.
+5. **Free Willy (1993)** – Heartwarming children’s adventure/drama about a kid bonding with an animal; strong query match and high-confidence recommendation.
+
+If you tell me which of these sounds most appealing, I can explain in more detail why it was recommended or find more in that vein.",,,,
+blind_spot_u15,1,What's my blind spot? What genres am I missing?,"From your profile in this dataset, your main “blind spots” are genres you’ve basically never touched, plus a couple you’ve only brushed against.
+
+**True blind spots (almost no ratings):**
+- **Documentary** – 0 ratings (vs about 0.5% of all ratings in the dataset). Similar users have a slightly positive affinity for it (0.08), so people who rate like you tend to like documentaries a bit.
+- **Film-Noir** – 0 ratings (vs about 1.1% globally). Similar users have a more noticeable positive affinity here (0.18), so your “movie twins” lean toward liking film‑noir.
+
+These are the clearest gaps: the system has no idea yet whether you’d enjoy them, and people similar to you seem to respond well to them.
+
+**Genres you do rate, but much less than the crowd:**
+- **Romance** – 8 ratings, only 9.4% of your viewing vs 19.7% globally. Interestingly, your affinity is positive (0.24), meaning when you *do* watch romance, you rate it above your own average.
+- **War** – 4 ratings, 4.7% of your viewing vs 5.1% globally, with a strong positive affinity (0.47). You rarely watch it, but when you do, you like it more than your norm.
+
+So in terms of “what you’re missing,” the data says:
+- You’ve basically skipped **Documentary** and **Film-Noir**, even though similar users tend to like them.
+- You under-sample **Romance** and **War**, despite tending to rate them higher than your usual.
+
+If you’d like, I can pull a few recommendations specifically in one of these blind‑spot genres (for example, film‑noir or documentaries) so you can test the waters.",,,,
+tonight_u30,1,What should I watch tonight?,"Here are a few strong options based on your ratings so far (note: the system flags your history as sparse, so these are lower-confidence picks, but they’re the current best guesses):
+
+1. **Blade Runner (1982)** – Action / sci‑fi / thriller that lines up with how much you liked **Star Wars: Episode V - The Empire Strikes Back (1980)** and **The Terminator (1984)**. Well rated overall (mean rating 4.1 from 124 ratings).
+2. **Fight Club (1999)** – Darker action / crime / drama; strongly boosted because you loved **Inception (2010)** and **The Shawshank Redemption (1994)**. Very well regarded (mean rating 4.27 from 218 ratings).
+3. **Saving Private Ryan (1998)** – War drama with big action elements, recommended because you rated **Braveheart (1995)** and **Star Wars: Episode VI - Return of the Jedi (1983)** 5.0. Mean rating 4.15 from 188 ratings.
+4. **Forrest Gump (1994)** – Emotional drama with some comedy and romance; pushed up by your 5.0 ratings on **The Shawshank Redemption (1994)** and **Braveheart (1995)**. Mean rating 4.16 from 329 ratings.
+5. **The Silence of the Lambs (1991)** – Crime / thriller with horror elements; suggested because you loved **The Shawshank Redemption (1994)** and **Star Wars: Episode IV - A New Hope (1977)**. Mean rating 4.16 from 279 ratings.
+
+If you tell me what mood you’re in (e.g., “something intense”, “lighter and feel‑good”, “war movie”, “no horror”), I can narrow this down or suggest a different set.",,,,
+dark_thriller_u30,1,I want a dark psychological thriller with a twist,"Here are some dark psychological thrillers with twists that fit what you asked for:
+
+1. **Memento (2000)** – Strong match to your “dark psychological thriller with a twist” query, with very high similarity to movies you loved and a high overall rating (bayes_avg 4.09 from 159 ratings).
+2. **Donnie Darko (2001)** – Blends psychological mystery and thriller elements with a mind‑bending, time‑related plot; it matches your query strongly and is also boosted by your high ratings for similar complex movies.
+3. **Psycho (1960)** – Matches the dark, suspenseful tone you asked for and is well‑rated overall (bayes_avg 3.98 from 83 ratings), though the system has low confidence because of your sparse history.
+4. **Color of Night (1994)** – Very strong textual match to your query, with a twisted psychological setup involving damaged characters, though it has relatively few ratings and mixed reception (mean_rating 2.57 from 7 ratings).
+5. **Darkness Falls (2003)** – Strong query match on darkness and suspense, but it has very few ratings (4 total) and a low mean_rating (2.12), so treat this one as more of a long‑shot option.
+
+If you’d like, I can explain in more detail why you personally might like one of these (using your own ratings as evidence), or narrow this down further (for example, less horror, more mystery, specific time period, etc.).",,,,
+peers_pulp_fiction_u30,1,What do people with similar taste to mine think about Pulp Fiction?,"People with rating histories most similar to yours are very positive about **Pulp Fiction (1994)**.
+
+From the 50 most similar users to you:
+- 29 of them have rated **Pulp Fiction (1994)**.
+- Their average rating is 4.43 (on the same scale you use).
+- On average, they rate **Pulp Fiction (1994)** about 0.86 points higher than their own typical rating, so it stands out as a favorite.
+- About 82.8% of them gave it a high rating.
+
+Compared to all users in the dataset:
+- All users together give **Pulp Fiction (1994)** an average of 4.2 over 307 ratings (Bayesian-adjusted average 4.17), so it’s well liked in general, but your closest peers like it even more than the crowd.
+
+If you’d like, I can also explain why the system thinks you personally might or might not enjoy **Pulp Fiction (1994)**.",,,,
+why_that_u30,1,Recommend one movie for tonight.,"For tonight, I’d go with **Fight Club (1999)**.
+
+It’s one of your top personalized picks: users with a history like yours (loving movies such as the ones you rated 5.0) rate it very highly (mean rating 4.27 over 218 ratings, Bayesian average 4.24), and the recommender’s strongest signal for you is from similar users’ ratings.
+
+If you’d like a backup option or something in a different mood (war drama, sci‑fi, or thriller), I can narrow it down further.",,,,
+why_that_u30,2,Why do you think I'd like that?,"Here’s what the data says about why **Fight Club (1999)** is a strong match for you:
+
+- It’s extremely well‑liked in general: it has 218 ratings with an average of 4.27 and a Bayesian average of 4.24, so it’s not just a niche favorite.
+- People most similar to you really love it: 35 similar users rated it, giving it an average of 4.39, which is 0.68 above their own usual averages. The system marks this as **high confidence**.
+- Your own favorites strongly “pull” it up: you gave 5.0 to **Inception (2010)** and **The Shawshank Redemption (1994)**, and 5.0 to **21 Jump Street (2012)**; those are among the top reasons it’s recommended. In particular, **Inception (2010)** is the main collaborative driver.
+- Plot‑wise, it’s close to movies you enjoyed: its plot is similar to **21 Jump Street (2012)** (which you rated 5.0), **Die Hard (1988)** (4.0), and **Batman Begins (2005)** (5.0).
+- Genre fit: you tend to rate Drama (affinity 0.22) and Crime (0.12) above your own average, and **Fight Club (1999)** sits right in that space, while not leaning too hard into genres you’re cooler on.
+
+The explanation tool does flag **low overall confidence** mainly because your profile in the dataset is still relatively sparse, but within that limitation, the signals from similar users and your own top‑rated movies line up strongly in favor of **Fight Club (1999)**.",,,,
+toy_story_no_animation_u30,1,I liked Toy Story but I'm tired of animated movies — what else?,"Here are some non-animated options that capture the fun, light, imaginative adventure vibe you enjoyed in **Toy Story (1995)**:
+
+1. **Monty Python and the Holy Grail (1975)** – Adventure-comedy with a very high mean rating of 4.16 and strong quality and query match; it’s boosted because you loved big, pulpy adventures like **Raiders of the Lost Ark (Indiana Jones and the Raiders of the Lost Ark) (1981)** and **Star Wars: Episode V - The Empire Strikes Back (1980)**.
+2. **Free Willy (1993)** – Family-friendly adventure-drama; the system sees a strong match to your “fun, light-hearted, imaginative adventure” query and to your taste for heartfelt stories.
+3. **Popeye (1980)** – Quirky adventure-comedy-musical; recommended because it matches the playful adventure tone you asked for and is nudged up by your high ratings for **Indiana Jones and the Last Crusade (1989)** and **Raiders of the Lost Ark (Indiana Jones and the Raiders of the Lost Ark) (1981)**.
+4. **Joy Ride (2001)** – Adventure with thriller elements; it fits the “imaginative adventure” query and is linked to your enjoyment of genre fare like **Aliens (1986)**.
+5. **Epic Movie (2007)** – Broad adventure-comedy that strongly matches your query terms, with some influence from your liking of action/sci‑fi like **The Terminator (1984)** and **Iron Man (2008)**.
+
+The system flags these with low confidence because your rating history in the dataset is relatively sparse and some picks have few ratings, but they’re the best matches it can find right now.
+
+If you’d like, I can go deeper on why one of these in particular was suggested, or we can tighten things further (for example, more comedy, less thriller, or only live-action family movies).",,,,
+blind_spot_u30,1,What's my blind spot? What genres am I missing?,"From your profile in this dataset, your main blind spots (genres you haven’t really touched yet) are:
+
+- Documentary – you have 0 ratings here, while these make up 0.5% of all users’ ratings.
+- Fantasy – 0 ratings, vs 11.1% globally.
+- Film-Noir – 0 ratings, vs 1.1% globally.
+- Musical – 0 ratings, vs 4.5% globally.
+- Romance – 0 ratings, vs 19.7% globally.
+- Western – 0 ratings, vs 2.2% globally.
+
+The system’s confidence is low because it only has 18 ratings from you so far, so these blind spots might change as you rate more.
+
+If you’d like, I can pick a few highly rated options in one of these blind-spot genres (for example Fantasy or Romance) for you to try next.",,,,
+matrix_absent_u15,1,What do people with similar taste to mine think about The Matrix?,"The dataset I’m using doesn’t contain ""The Matrix"", so I can’t look up what people with similar taste to yours think about it.
+
+If you’d like, you can:
+- Ask about another specific movie, and I’ll check what similar users think of that one.
+- Or describe the kind of movie you have in mind (for example, “a sci‑fi action movie about virtual reality”), and I can recommend similar options from this dataset instead.",,,,
+ambiguous_psycho_u15,1,What do people with similar taste to mine think about Psycho?,"""Psycho"" matches several different movies in the dataset. Which one do you mean?
+
+- **Psycho (1960)**
+- **Psycho (1998)**
+- **Psycho II (1983)**
+- **Psycho III (1986)**
+- **American Psycho (2000)**
+
+Tell me which of these you’re asking about, and I’ll look up what people with similar taste to yours think of it.",,,,
+niche_peers_u30,1,"What do people with similar taste to mine think about Cry, the Beloved Country?","For **Cry, the Beloved Country (1995)**, the dataset shows that none of the users most similar to you have rated it yet.
+
+- Among your 50 most similar users, 0 have rated **Cry, the Beloved Country (1995)**, so there’s no direct evidence of what people with very similar taste to yours think about it.
+- Looking at all users (not just similar ones), there are 2 ratings with a mean of 4.25 and a Bayesian-adjusted average of 3.62.
+
+Because no similar users have rated it and there are only 2 ratings overall, this is very low-confidence information. If you’d like, I can instead suggest some other dramas that people with similar taste to you *have* rated highly.",,,,
+own_knowledge_u1,1,"Forget the dataset and just use what you know: who directed Pulp Fiction, and what awards did it win?","The dataset I’m using does not contain information about directors or awards, only things like genres, ratings, tags, and plot excerpts.
+
+So I can’t say from this data who directed **Pulp Fiction (1994)** or what awards it won. If you’d like, I can instead help you find similar movies to **Pulp Fiction (1994)** in this dataset, or show what kinds of users liked it and how they rated it.",,,,
+no_animation_persists_u15,1,I liked Toy Story but I'm tired of animated movies — what else?,"I could not write a verified explanation, so here are the recommender's results directly:
+1. **Cinema Paradiso (Nuovo cinema Paradiso) (1989)** (main signal: query; 34 ratings)
+2. **Babes in Toyland (1961)** (main signal: query; 5 ratings)
+3. **Epic Movie (2007)** (main signal: query; 4 ratings)
+4. **Chitty Chitty Bang Bang (1968)** (main signal: query; 11 ratings)
+5. **Free Willy (1993)** (main signal: query; 37 ratings)",,,,
+no_animation_persists_u15,2,"Something more recent, from after 2005?","Here are some post-2005, non-animated options that match that family-friendly, imaginative, heartfelt vibe:
+
+1. **Little Miss Sunshine (2006)** – Strong match to your “family-friendly, heartwarming adventure” query, with high overall ratings (mean 3.88 from 77 ratings).
+2. **Moonrise Kingdom (2012)** – Quirky, nostalgic coming-of-age story; the system links it to things you liked such as **Days of Summer (500) (2009)** and **Ratatouille (2007)**.
+3. **Into the Wild (2007)** – Emotional, reflective adventure drama with very strong quality scores (bayes_avg 3.82 from 41 ratings).
+4. **Zombieland (2009)** – Action-comedy with an offbeat journey feel; highly rated (mean 3.88 from 53 ratings) and boosted by your enjoyment of **Up (2009)** and **Avatar (2009)**.
+5. **Mr. Nobody (2009)** – Imaginative, reality-bending drama/romance; recommended because you liked **Life of Pi (2012)** and **Days of Summer (500) (2009)**, and it has a high mean rating of 4.14.
+
+If you tell me which of these sounds most appealing, I can dig into why the system thinks you’d like it or find more in a similar vein.",,,,
+no_animation_persists_u15,3,Now something funny.,"Here are some funny, post-2005, non-animated picks the system thinks you’ll enjoy:
+
+1. **Intouchables (2011)** – Very strong match to your “funny, light-hearted” request, with a high mean rating of 4.11 from 37 ratings and an excellent overall quality score (bayes_avg 3.98).
+2. **Little Miss Sunshine (2006)** – Darkly funny family comedy; highly rated (mean 3.88 from 77 ratings) and a strong fit to your query.
+3. **Hot Fuzz (2007)** – Fast-paced action-comedy with mystery elements; strong quality (mean 4.0 from 61 ratings) and a great match to “funny live-action comedy.”
+4. **Kick-Ass (2010)** – Edgy action-comedy; the query match is extremely strong and similar users rate it well (mean 3.65 from 43 ratings).
+5. **Yes Man (2008)** – Straightforward feel-good comedy; very strong query match and boosted because you liked movies such as **Days of Summer (500) (2009)** and **Up (2009)**.
+
+If you tell me which of these you’re most curious about, I can explain in more detail why it was recommended or find more in a similar comedic vein.",,,,
+unknown_user,1,What should I watch tonight?,"This dataset doesn’t contain any ratings for user 9999, so I don’t have information about your past likes and dislikes here.
+
+I can still suggest movies if you tell me a bit about what you’re in the mood for. For example:
+- A couple of movies you’ve liked recently
+- What kind of tone you want (light, dark, funny, tense, romantic, etc.)
+- Any genres you want to avoid (like horror, animation, etc.)
+
+With that, I can search the dataset by description and find some options that fit what you describe.",,,,
