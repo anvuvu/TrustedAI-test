@@ -499,6 +499,7 @@ The tag stoplist is extended if more list-style tags turn up during validation.
 Exam/                     brief (README.md), REPORT_TEMPLATE.md, data/ — READ-ONLY
 README.md                 project overview + setup (written in Step 3)
 REPORT.md
+README.vi.md  REPORT.vi.md   Vietnamese translations (same generated tables)
 CLAUDE.md
 pyproject.toml  .env.example  .gitignore
 configs/default.yaml

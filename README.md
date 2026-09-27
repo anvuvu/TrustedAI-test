@@ -1,8 +1,10 @@
 # Movie discovery agent
 
+**English** | [Tiếng Việt](README.vi.md)
+
 A conversational assistant that helps a MovieLens user discover movies by investigating the dataset on their behalf: their ratings, similar users' ratings, plots and genres. It decides what to look up, calls deterministic tools, and explains every recommendation with evidence from the data, never from the LLM's own movie knowledge.
 
-- **Report:** [`REPORT.md`](REPORT.md) (problem analysis, approach, evaluation, failure analysis, reflection)
+- **Report:** [`REPORT.md`](REPORT.md) (problem analysis, approach, evaluation, failure analysis, reflection); Vietnamese translation: [`REPORT.vi.md`](REPORT.vi.md)
 - **Design:** [`docs/design.md`](docs/design.md) · **Lab notebook:** [`docs/notes.md`](docs/notes.md)
 - **Brief and data:** [`Exam/`](Exam/) (the unmodified handout, read-only)
 
@@ -49,7 +51,7 @@ The first command that ranks movies downloads the local embedding model `BAAI/bg
 | `movie-agent eval search` | Top 5 per judged query; scores the graded sheet `eval/search_judgments.csv` | no |
 | `movie-agent eval agent` | The 24 scenarios in `eval/scenarios.yaml`; saves transcripts and a rubric sheet | yes |
 | `movie-agent eval honesty` | Explanation fidelity (no key) plus the perturbation and attribution tests (key) | yes |
-| `movie-agent report-tables` | Regenerates `eval/results/report_tables.md`, the figures and the tables inside `REPORT.md` | no |
+| `movie-agent report-tables` | Regenerates `eval/results/report_tables.md`, the figures and the tables inside `REPORT.md` and `REPORT.vi.md` | no |
 | `movie-agent eval offline --split test --final` | The single final test run; already done and logged in `eval/results/test_runs.log` | no |
 
 Checks: `pytest -q` (tiny synthetic fixture, LLM mocked, no network) and `ruff check . && ruff format --check .`.
@@ -92,4 +94,5 @@ eval/                     search queries and judgments, scenarios, rubric, gradi
 tests/                    pytest suite and the tiny fixture
 transcripts/  traces/examples/   curated sample conversations and their traces
 docs/                     design.md, notes.md
+REPORT.md  REPORT.vi.md   the report and its Vietnamese translation
 ```

@@ -14,6 +14,7 @@ TrustedAI AI Engineer take-home. A conversational assistant that helps a user di
 - Dataset: `Exam/data/ml-latest-small-filtered/`. **Everything under `Exam/` is read-only.**
 - The root `README.md` is ours: project overview and setup instructions, written in Step 3.
 - `REPORT.md` lives at the root.
+- `REPORT.vi.md` and `README.vi.md` are Vietnamese translations. The English files are canonical; change both in the same commit. `report-tables` refreshes the tables in both reports, and a test checks that they match.
 
 ## Before you write code
 

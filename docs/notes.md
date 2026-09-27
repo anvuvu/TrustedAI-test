@@ -489,3 +489,18 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
   (paired bootstrap, seed from config). Its numbers match the ones above.
 - REPORT.md: a short "Model swap" section under Evaluation, one sentence in Reflection, and
   deviation 5. Test split untouched; nothing else in the report changed.
+
+## 2026-09-27 — Vietnamese translations of the report and README (author's request)
+
+- `REPORT.vi.md` and `README.vi.md`, with an `English | Tiếng Việt` switcher at the top of all four
+  files. GitHub has no language selector for Markdown, so linked files are the usual way to offer one.
+  The English files stay canonical.
+- The translated report keeps the generated tables: `report-tables` now refreshes the marked blocks
+  in both reports, and `test_vietnamese_translations_stay_in_sync_with_the_english_documents`
+  checks that both reports carry identical table blocks and that each pair links to the other.
+  Tables, quoted user queries and quoted system answers stay in English. Numbers use the English
+  convention so they match the tables.
+- While translating, two claims in REPORT.md turned out to be stale after the gpt-5.1 run, and were
+  narrowed to the gpt-4.1-mini runs: "tool choice was right in every turn of every run" (agent_6 has
+  tool-chain accuracy 0.97) and "every verifier rejection in the final runs was a typed title"
+  (agent_6 also has V3 rejections).

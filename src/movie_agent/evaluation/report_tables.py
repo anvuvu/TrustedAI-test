@@ -27,6 +27,8 @@ import matplotlib.pyplot as plt  # noqa: E402  (backend must be set first)
 KINDS = ("offline_test", "offline_val", "search", "agent", "honesty")
 LLM_KINDS = ("agent", "honesty")
 GRADING_DIR = PROJECT_ROOT / "eval" / "grading"
+# The report and its Vietnamese translation carry the same generated tables.
+REPORTS = (PROJECT_ROOT / "REPORT.md", PROJECT_ROOT / "REPORT.vi.md")
 
 
 def latest_run(results_dir: Path, kind: str, model: str | None = None) -> Path | None:
@@ -50,13 +52,14 @@ def run_model(run: Path) -> str | None:
     return (yaml.safe_load(snapshot.read_text()).get("agent") or {}).get("model")
 
 
-def run_report_tables(cfg: Config, report: Path | None = None) -> Path:
-    """Write report_tables.md and the figures, and refresh the tables inside REPORT.md.
+def run_report_tables(cfg: Config, reports: tuple[Path, ...] = REPORTS) -> Path:
+    """Write report_tables.md and the figures, and refresh the tables inside the reports.
 
-    In REPORT.md, the text between `<!-- table:NAME -->` and `<!-- /table:NAME -->` is replaced
-    by the generated section NAME (offline, search, agent, agent_runs, honesty, model_swap), so
-    the report's tables always come from saved results. The agent and honesty tables use runs
-    made with the configured model; `agent_runs` lists every run with its model.
+    In each report (REPORT.md and its translation REPORT.vi.md), the text between
+    `<!-- table:NAME -->` and `<!-- /table:NAME -->` is replaced by the generated section NAME
+    (offline, search, agent, agent_runs, honesty, model_swap), so the report's tables always
+    come from saved results. The agent and honesty tables use runs made with the configured
+    model; `agent_runs` lists every run with its model.
     """
     results = cfg.paths.results_dir
     model = cfg.agent.model
@@ -93,9 +96,9 @@ def run_report_tables(cfg: Config, report: Path | None = None) -> Path:
     out = results / "report_tables.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines).rstrip() + "\n")
-    report = report or PROJECT_ROOT / "REPORT.md"
-    if report.exists():
-        report.write_text(refresh_report(report.read_text(), sections))
+    for report in reports:
+        if report.exists():
+            report.write_text(refresh_report(report.read_text(), sections))
     return out
 
 

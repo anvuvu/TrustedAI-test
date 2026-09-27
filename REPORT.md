@@ -1,5 +1,7 @@
 # Report: [Your Name]
 
+**English** | [Tiếng Việt](REPORT.vi.md)
+
 **In one paragraph.**
 - **Architecture.** The assistant answers from a MovieLens subset through five deterministic tools. The LLM (gpt-4.1-mini) only picks tools and phrases their results. It names movies through ID placeholders, and a verifier checks every answer before the user sees it.
 - **Accuracy.** On the held-out test split, used once, the deployed ranking ties with EASE (NDCG@10 0.113) and beats the MostPopular baseline by +0.029 [0.016, 0.041].
@@ -223,12 +225,12 @@ Rubric columns are means (0–2) where the run was graded (by an LLM grader, see
 | `2026-09-27_agent_6` | gpt-5.1 | system_v2 | 7a2a4e6-dirty | 0.72 | 0.03 | 1.00 | 0.75 | - | - | - | - |
 <!-- /table:agent_runs -->
 
-- **Tool choice was right in every turn of every run** (tool-chain accuracy 1.00), including the edge cases:
+- **Tool choice was right in every turn of every gpt-4.1-mini run** (tool-chain accuracy 1.00), including the edge cases:
   - The Matrix is reported as absent from the dataset.
   - "Psycho" gets a clarifying question listing the 1960 film and the 1998 remake.
   - "Just use what you know" is declined.
   - For a niche movie with no peer ratings, the answer says so.
-- **The main LLM failure is typing movie titles.** Every verifier rejection in the final runs was a typed title, and every one was recovered by the retry. Prompt v2 raised the first-pass rate from 0.48 to about 0.8 and cut the fallback rate from 0.10 to 0.00–0.03.
+- **The main LLM failure is typing movie titles.** Every verifier rejection in the final gpt-4.1-mini runs was a typed title, and every one was recovered by the retry. Prompt v2 raised the first-pass rate from 0.48 to about 0.8 and cut the fallback rate from 0.10 to 0.00–0.03.
 - **Run-to-run variance is real.** Two identical runs of v2 gave state persistence 0.67 and 0.17, which is why that fix moved into code (see the decision log). After the change it was 1.00 in both runs.
 - **Rubric (LLM grader)** after the two fixes: relevant 1.97, specific 1.72, honest 1.90, **grounded 1.45**. The run before the fixes was graded by another grader instance, so the change is indicative only. Groundedness is the weak point. Its six zeros come from two causes:
   - calling a history movie "liked" when the user rated it 1.0–2.5 (failure case 3);
