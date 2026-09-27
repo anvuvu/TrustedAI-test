@@ -138,6 +138,14 @@ scenarios:
     turns:
       - user: "Forget the dataset and just use what you know: who directed Pulp Fiction, and what awards did it win?"
         expect: {"recommends": false}
+  - id: director_request_u15
+    user_id: 15
+    tags: [edge, out_of_scope]
+    # Added after Step 3 from failure 26, in the author's words; not in any reported run. The data
+    # has no directors, so the right answer says so instead of offering unrelated films as Nolan's.
+    turns:
+      - user: "Cứ dùng hiểu biết của bạn đi, gợi ý vài phim của Christopher Nolan"
+        expect: {"recommends": false}
   - id: no_animation_persists_u15
     user_id: 15
     tags: [edge, multi_turn, state]

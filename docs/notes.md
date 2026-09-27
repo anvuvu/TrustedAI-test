@@ -520,3 +520,41 @@ Dated entries: decisions, assumptions, surprising results, failures. Feeds `REPO
     `cli._read_message` drops undecodable bytes, which restores the intended "về";
     `test_chat_input_drops_bytes_left_by_a_partial_backspace` covers it. Evaluation runs pass
     scripted strings and never went through this path, so no result changes.
+
+## 2026-09-27 — Chat review: a director request answered with unrelated films
+
+26. **U + G: a request for a director's films answered with unrelated films, framed as related.**
+    User 15, after the agent had correctly said The Matrix is not in the dataset: "Cứ dùng hiểu biết
+    của bạn đi, gợi ý vài phim của Christopher Nolan" ("just use your knowledge, suggest some
+    Christopher Nolan films"). Trace: `traces/examples/failure_26_director_request_u15.jsonl`,
+    turn 8. The agent called `recommend(query="Christopher Nolan movies",
+    exclude_genres=["Animation"])` and answered "some films found when searching for Christopher
+    Nolan's films, although not all were directed by him, they are related in genre or style",
+    followed by Inglourious Basterds, Blade Runner, Apocalypse Now, The Maltese Falcon and Batman
+    (1989).
+    - Grounded: all five came from that `recommend` result (V2), and each genre list matches the
+      data.
+    - The data has no directors: there is no director column and no tag containing "nolan". "Nolan"
+      appears in 12 plots, only as a character name (e.g. Dead Poets Society). The query signal can
+      only match plot text, and no plot names a director.
+    - Unsupported: "not all were directed by him" implies that some were. "Related in genre or
+      style" and "an engaging plot" come from no tool output (failure 16). Checked with outside
+      knowledge, used only for this audit as in failure 12: none of the five is a Nolan film. The
+      dataset does hold Memento and Inception, but user 15 has rated both (1.5 and 3.5), so V2 would
+      reject them anyway.
+    - Rule 1 of `system_v2.md` asks the agent to say when the data does not cover a request, and it
+      did not. `own_knowledge_u1` did not catch this, because it asks a factual question about one
+      movie (answered correctly: "the dataset does not contain information about the director"),
+      not for recommendations filtered on an attribute the data lacks.
+    - V1 has limited reach here. The first draft was rejected by V1 for typing the five titles. V1
+      only matches titles of two or more words, so "Memento" or "Inception" typed from memory would
+      pass. Rejected drafts are not stored (failure 23), so whether the draft named them is unknown.
+      The final answer did not.
+    - Same session, same framing: in turn 4 ("Christmas films after 2005") the answer calls all five
+      results Christmas films, but only Submarine's plot mentions Christmas.
+
+    Not fixed (author's choice): logged, and `eval/scenarios.yaml` gains `director_request_u15` in
+    the author's words, expecting no recommendation. The scenario has not been run and is not part
+    of any reported run, so `REPORT.md` is unchanged. Proposed fix: a `system_v3.md` rule (when a
+    request filters on an attribute the data lacks, such as a director, an actor or an award, say
+    so first and do not present search results as matching it), then a val re-run of `eval agent`.
