@@ -1,0 +1,22 @@
+# Content search queries (design §9.3). Graded 0/1/2 in eval/search_judgments.csv.
+queries:
+  - id: q01_dark_twist
+    text: "a dark psychological thriller with a twist"
+  - id: q02_unlikely_friends
+    text: "a heartwarming story about friendship between unlikely companions"
+  - id: q03_bleak_loneliness
+    text: "a bleak, atmospheric film about loneliness"
+  - id: q04_road_trip
+    text: "a funny road trip with a mismatched pair"
+  - id: q05_heist_crew
+    text: "a heist planned by a crew of professional thieves"
+  - id: q06_time_travel
+    text: "time travel that changes the past"
+  - id: q07_wrongly_accused
+    text: "a courtroom drama about a man wrongly accused of a crime"
+  - id: q08_space_survival
+    text: "survival in space after an accident on a spacecraft"
+  - id: q09_war_romance
+    text: "a love story set during a war"
+  - id: q10_haunted_house
+    text: "a family terrorized by a ghost in a haunted house"

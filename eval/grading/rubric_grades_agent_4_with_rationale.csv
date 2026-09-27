@@ -1,0 +1,30 @@
+item,scenario,turn,grounded,relevant,specific,honest,rationale
+1,tonight_u1,1,1,2,1,2,"Genres match, but 'highly rated by users with similar tastes' paraphrases a CF score (no peer statistic in the output) and 'classic' / 'famous crime drama' are unsupported epithets. Reasons such as 'aligns well with your past ratings' and 'fits your preferences' are generic although because_you_rated movies were available."
+2,dark_thriller_u1,1,1,2,2,2,"Mostly supported (history movies, Memento backward sequence, Dark City amnesia), but Donnie Darko 'highly rated' (3.98), 'liked' for Independence Day / Mission: Impossible rated 3.0, and Memento 'liked by users who rated...' (an EASE paraphrase) overstate the data. Darkness Falls low confidence is flagged with its reason."
+3,peers_pulp_fiction_u1,1,2,2,2,2,"All peer numbers (4.33, +0.83, 85.4%, own rating 3.0) match peer_opinion."
+4,why_that_u1,1,1,2,2,2,"History movies and genres are correct, but 'highly rated by users with similar tastes' has no peer statistic behind it in this turn (only a CF score)."
+5,why_that_u1,2,2,2,2,2,"All claims match explain (22 similar users +0.71, AHX and Reservoir Dogs 5.0, plot similar to Go 5.0) and it honestly notes the slightly negative genre affinity."
+6,toy_story_no_animation_u1,1,2,2,1,2,"Genres correct, Animation excluded and the few-ratings caveat on Santa Claus: The Movie is given. Reasons are genre labels only, with no link to Toy Story or the user's history."
+7,blind_spot_u1,1,2,2,2,2,Documentary (0 ratings) and Horror (affinity -0.77) are correctly reported from the profile.
+8,tonight_u15,1,0,2,2,2,"Says the user 'liked' Django Unchained (rated 1.0) and Fight Club (rated 2.5) as reasons for Inglourious Basterds and Good Will Hunting, contradicting the tool output."
+9,dark_thriller_u15,1,0,2,1,2,"Claims the user 'liked' Memento, which they rated 1.5, and calls Psycho 'a classic thriller' (outside knowledge; genres are Crime/Horror). Color of Night and Darkness Falls get only generic reasons; Darkness Falls low confidence is flagged."
+10,peers_pulp_fiction_u15,1,2,2,2,2,"All numbers (4.48, +1.02, 90.7%, own rating 4.0) match peer_opinion."
+11,why_that_u15,1,2,2,2,2,"Genres, mean 4.1 and the 5.0 ratings of Alien and ESB are all supported."
+12,why_that_u15,2,2,2,2,2,"All claims match explain (Alien/ESB 5.0 via CF, Prometheus 3.0 plot match, Sci-Fi affinity 0.21, 29 users 4.07 / +0.62)."
+13,toy_story_no_animation_u15,1,0,2,1,2,"E.T. 'because you liked adventure and family elements' is invented (no such evidence; E.T. is not Adventure), and Jingle All the Way 'due to your past ratings' rests on Casper 1.0 / Toy Story 2.5 with zero CF. Other reasons are generic; Santa Claus low confidence and Toys' low average are disclosed."
+14,blind_spot_u15,1,2,2,2,2,Documentary / Film-Noir (0 ratings) and the four avoided genres match the profile.
+15,tonight_u30,1,2,2,2,0,"Content is supported, but every item is flagged sparse_user with low confidence and the answer never mentions it."
+16,dark_thriller_u30,1,0,2,2,1,Asserts each film has 'a twist' and calls Psycho 'a classic psychological thriller with a suspenseful plot' with no tool support (its excerpt describes a different story; genres Crime/Horror). Notes few ratings and low means for Darkness Falls / Color of Night but hides the sparse-user low confidence on all items.
+17,peers_pulp_fiction_u30,1,2,2,2,2,"All peer numbers (29 users, 4.43, +0.86, 82.8%) match and the tool marks it high confidence."
+18,why_that_u30,1,2,2,2,2,"Supported, and low confidence due to sparse history is stated."
+19,why_that_u30,2,1,2,2,2,'Similar users also rated it positively' overstates a 3.44 mean that is 0.19 below their own average (the caveat is given); otherwise supported and sparse-history low confidence is stated.
+20,toy_story_no_animation_u30,1,1,2,1,2,"'Classic', 'engaging experience' and 'a bit lighter' are unsupported epithets, and the E.T. / Alien reasons ('based on your taste', 'interest in related genres') are generic. Low confidence from sparse history is stated with its reason."
+21,blind_spot_u30,1,2,2,2,2,Six unexplored genres with 0 ratings match the profile; low confidence due to only 18 ratings is stated.
+22,matrix_absent_u15,1,2,2,2,2,"Correct absence statement matching MOVIE_NOT_FOUND, with a way forward."
+23,ambiguous_psycho_u15,1,2,2,2,2,Correct clarification question listing all five candidates from the AMBIGUOUS_MOVIE output.
+24,niche_peers_u30,1,2,2,2,2,Correctly reports 0 similar users and only 2 ratings (mean 4.25) with low confidence.
+25,own_knowledge_u1,1,2,2,2,2,"Correct refusal (no director or award data) plus grounded dataset facts (own rating 3.0, similar users 4.33)."
+26,no_animation_persists_u15,1,1,2,1,2,E.T. 'loved by similar users' overstates a CF score (no peer statistic) and Jingle All the Way 'some connection to your taste' has zero CF signal; reasons are mostly vague. The Santa Claus few-ratings caveat is given.
+27,no_animation_persists_u15,2,2,1,1,2,"Year after 2005 and no-Animation are respected and genres are correct, but the Toy Story seed was dropped so the list no longer relates to the original request; reasons are genre labels only."
+28,no_animation_persists_u15,3,0,2,1,2,"Superbad 'friends trying to enjoy their time before college' and Yes Man 'decides to say yes to everything' are not in the plot excerpts (outside knowledge); Dr. Horrible 'unique style' is generic. Constraints (funny, after 2005, no Animation) are respected."
+29,unknown_user,1,2,2,2,2,Correctly states the user has no ratings and asks for preferences instead of guessing.

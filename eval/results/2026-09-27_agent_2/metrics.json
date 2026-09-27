@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "git_commit": "c315916-dirty",
+    "config_hash": "97fe50f9e101"
+  },
+  "n_scenarios": 24,
+  "n_turns": 29,
+  "scenario_success": 0.6666666666666666,
+  "turn_success": 0.6896551724137931,
+  "tool_chain_accuracy": 1.0,
+  "verifier_first_pass_rate": 0.7931034482758621,
+  "fallback_rate": 0.0,
+  "constraint_satisfaction": 1.0,
+  "state_persistence": 0.6666666666666666,
+  "mean_tool_calls": 1.4137931034482758,
+  "mean_tokens": 6518.137931034483,
+  "p50_latency_ms": 2834.7,
+  "p95_latency_ms": 5167.659999999999,
+  "failed_turns": [
+    {
+      "scenario": "toy_story_no_animation_u1",
+      "turn": 1
+    },
+    {
+      "scenario": "dark_thriller_u15",
+      "turn": 1
+    },
+    {
+      "scenario": "why_that_u15",
+      "turn": 2
+    },
+    {
+      "scenario": "tonight_u30",
+      "turn": 1
+    },
+    {
+      "scenario": "why_that_u30",
+      "turn": 1
+    },
+    {
+      "scenario": "why_that_u30",
+      "turn": 2
+    },
+    {
+      "scenario": "toy_story_no_animation_u30",
+      "turn": 1
+    },
+    {
+      "scenario": "niche_peers_u30",
+      "turn": 1
+    },
+    {
+      "scenario": "own_knowledge_u1",
+      "turn": 1
+    }
+  ]
+}

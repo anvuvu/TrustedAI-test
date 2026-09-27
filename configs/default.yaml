@@ -1,0 +1,110 @@
+# Every tunable of the system (design §11). This is the only config file.
+seed: 42
+
+paths:
+  data_dir: Exam/data/ml-latest-small-filtered
+  cache_dir: cache
+  traces_dir: traces
+  results_dir: eval/results
+
+data:
+  test_frac: 0.2
+  val_frac: 0.1
+  min_test: 2              # at least this many test ratings per user
+  min_val: 1
+  liked_abs: 4.0           # primary relevance and "liked"
+  liked_rel: 0.5           # secondary relevance: r - user mean
+  short_plot_chars: 100    # validation flag
+  genre_exclude: ["IMAX", "(no genres listed)"]
+  tag_stoplist: ["in netflix queue"]
+
+stats:
+  bayes_C: 10
+  genre_alpha: 3
+
+resolve:
+  found_min: 90
+  ambiguous_min: 75
+  min_gap: 5
+  subset_weight: 0.9       # credit for a query whose words are all in a longer title
+  year_window: 1
+  max_candidates: 5
+
+user_knn:
+  k: 50
+  min_common: 5
+  gamma: 50
+  min_support: 2           # neighbours who rated a movie, for UserKNN-as-recommender
+
+ease:
+  lambda: 500
+  lambda_grid: [100, 300, 500, 1000]
+
+content:
+  model: BAAI/bge-small-en-v1.5
+  query_prefix: "Represent this sentence for searching relevant passages: "
+  chunk_tokens: 300
+  chunk_overlap: 50
+  batch_size: 64
+  excerpt_chars: 300
+
+ranking:
+  top_n: 200                 # feature score = 1 - (rank - 1) / N inside its top N, else 0
+  sparse_user_threshold: 30 # below this many ratings: flagged low confidence (weights unchanged)
+  query_min_ratings: 3
+  seed_weight_with_query: 0.3
+  weights:
+    personal: {cf: 0.7, content: 0.2, quality: 0.1}
+    query:    {query: 0.6, cf: 0.2, quality: 0.2}
+    seed:     {seed: 0.5, cf: 0.3, quality: 0.2}
+
+tools:
+  default_k: 5
+  max_k: 20
+  plot_excerpt_chars: 400
+  top_tags: 5
+  profile_top_liked: 10
+  profile_bottom: 5
+  unexplored_share_ratio: 0.25   # share below this fraction of the global share
+  avoided_min_ratings: 3
+  avoided_max_affinity: -0.3
+  peer_examples: 5
+  explain_top_n: 3
+  ease_reasons_per_item: 2
+
+confidence:
+  peer_low_below: 3
+  peer_high_min: 8
+  user_low_below: 20
+  movie_low_below: 5
+
+agent:
+  provider: openai
+  model: gpt-4.1-mini
+  temperature: 0.0
+  max_tool_calls: 6
+  max_retries: 1                 # verifier retries before the template fallback
+  history_turns: 6
+  prompt_version: system_v2
+  request_timeout_s: 60
+
+verifier:
+  rating_tol: 0.05
+  pct_tol: 1.0
+  year_min: 1900
+  year_max: 2030
+
+evaluation:
+  k: 10
+  bootstrap_resamples: 1000
+  ci: 0.95
+  head_frac: 0.2                 # top 20% most-rated movies (train) form the head
+  sparse_movie_below: 5          # "sparse movie" in beyond-accuracy metrics
+  qualitative_users: [1, 15, 30]
+  cf_weight_grid: [0.5, 0.6, 0.7, 0.8, 0.9]
+  search_top_k: 5
+  fidelity_pairs: 30
+  fidelity_min_drop: 5
+  fidelity_top: 10
+  perturbation_pairs: 3
+  perturbation_min_neighbours: 8

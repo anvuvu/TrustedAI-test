@@ -1,0 +1,87 @@
+{
+  "checks": {
+    "ratings_unknown_movie": 0,
+    "duplicate_user_movie_pairs": 0,
+    "invalid_rating_values": 0,
+    "short_or_empty_plots": 0,
+    "missing_years": 0,
+    "tags_unknown_movie": 0
+  },
+  "facts": {
+    "n_movies": 5135,
+    "n_ratings": 74064,
+    "n_users": 610,
+    "n_tags": 2440,
+    "year_range": [
+      1903,
+      2014
+    ],
+    "titles_with_year_in_title": 0,
+    "titles_with_parenthetical_alias": 113,
+    "genre_labels": {
+      "Drama": 2326,
+      "Comedy": 2117,
+      "Thriller": 1047,
+      "Romance": 990,
+      "Action": 953,
+      "Adventure": 671,
+      "Crime": 667,
+      "Sci-Fi": 524,
+      "Horror": 492,
+      "Children": 390,
+      "Fantasy": 379,
+      "Mystery": 298,
+      "Animation": 231,
+      "Musical": 213,
+      "War": 211,
+      "Western": 113,
+      "IMAX": 84,
+      "Documentary": 82,
+      "Film-Noir": 60,
+      "(no genres listed)": 3
+    },
+    "n_genre_labels": 20,
+    "n_content_genres": 18,
+    "movies_with_0_ratings": 9,
+    "movies_under_3_ratings": 1884,
+    "movies_under_3_ratings_share": 0.3669,
+    "movies_under_5_ratings_share": 0.5118,
+    "ratings_per_user": {
+      "min": 10.0,
+      "median": 56.0,
+      "mean": 121.42,
+      "max": 1907.0
+    },
+    "ratings_per_movie": {
+      "min": 0.0,
+      "median": 4.0,
+      "mean": 14.42,
+      "max": 329.0
+    },
+    "users_under_10_ratings": 0,
+    "zero_variance_users": [
+      53
+    ],
+    "tie_boundary_users": 120,
+    "n_taggers": 45,
+    "top_tagger": {
+      "user_id": 474,
+      "n_tags": 1056,
+      "share": 0.4328
+    },
+    "movies_with_tags": 1026,
+    "top_tags_by_movies": {
+      "in netflix queue": 71,
+      "atmospheric": 20,
+      "disney": 18,
+      "politics": 15,
+      "sci-fi": 15,
+      "psychology": 14,
+      "high school": 14,
+      "religion": 14,
+      "thought-provoking": 14,
+      "mental illness": 13
+    },
+    "global_mean_rating": 3.4947
+  }
+}

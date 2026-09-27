@@ -1,0 +1,75 @@
+{
+  "query_mode": {
+    "percentile": {
+      "adherence": 0.45999999999999996,
+      "bayes": 3.925053852536801,
+      "n_ratings": 93.06,
+      "q01_top3": "Donnie Darko (2001); Psycho (1960); Twelve Monkeys (a.k.a. 12 Monkeys) (1995)"
+    },
+    "z-score": {
+      "adherence": 0.42000000000000004,
+      "bayes": 3.926774691493617,
+      "n_ratings": 133.42000000000002,
+      "q01_top3": "The Silence of the Lambs (1991); Twelve Monkeys (a.k.a. 12 Monkeys) (1995); Donnie Darko (2001)"
+    },
+    "min-max": {
+      "adherence": 0.6799999999999999,
+      "bayes": 3.8332405935884375,
+      "n_ratings": 91.67999999999999,
+      "q01_top3": "The Silence of the Lambs (1991); Dark City (1998); Twelve Monkeys (a.k.a. 12 Monkeys) (1995)"
+    },
+    "top-200": {
+      "adherence": 0.8800000000000001,
+      "bayes": 3.7134411715060693,
+      "n_ratings": 64.9,
+      "q01_top3": "Donnie Darko (2001); Psycho (1960); Notorious (1946)"
+    }
+  },
+  "personal_minmax": {
+    "EASE": {
+      "ndcg": {
+        "mean": 0.10226124522741284,
+        "lo": 0.08683442202570302,
+        "hi": 0.11809439984253378,
+        "n": 535
+      },
+      "vs_ease": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 535,
+        "significant": false
+      }
+    },
+    "min-max": {
+      "ndcg": {
+        "mean": 0.09591694825050104,
+        "lo": 0.08124163540246478,
+        "hi": 0.11140094874387653,
+        "n": 535
+      },
+      "vs_ease": {
+        "mean": -0.006344296976911814,
+        "lo": -0.012970372875711227,
+        "hi": 0.0007540612892839991,
+        "n": 535,
+        "significant": false
+      }
+    },
+    "min-max, no sparse adj.": {
+      "ndcg": {
+        "mean": 0.09806094937604111,
+        "lo": 0.08315078311178753,
+        "hi": 0.11484924821922346,
+        "n": 535
+      },
+      "vs_ease": {
+        "mean": -0.004200295851371738,
+        "lo": -0.008160281564246747,
+        "hi": -0.00020806793373791442,
+        "n": 535,
+        "significant": true
+      }
+    }
+  }
+}

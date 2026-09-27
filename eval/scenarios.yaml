@@ -1,0 +1,156 @@
+# Agent scenarios (design §9.4). Generated once; edit by hand from here on.
+scenarios:
+  - id: tonight_u1
+    user_id: 1
+    tags: [sample]
+    turns:
+      - user: "What should I watch tonight?"
+        expect: {"tools": ["recommend"], "recommends": true}
+  - id: dark_thriller_u1
+    user_id: 1
+    tags: [sample]
+    turns:
+      - user: "I want a dark psychological thriller with a twist"
+        expect: {"tools": ["recommend"], "recommends": true}
+  - id: peers_pulp_fiction_u1
+    user_id: 1
+    tags: [sample]
+    turns:
+      - user: "What do people with similar taste to mine think about Pulp Fiction?"
+        expect: {"tools": ["find_movie", "peer_opinion"], "recommends": false}
+  - id: why_that_u1
+    user_id: 1
+    tags: [sample]
+    turns:
+      - user: "Recommend one movie for tonight."
+        expect: {"tools": ["recommend"], "recommends": true}
+      - user: "Why do you think I'd like that?"
+        expect: {"tools": ["explain"]}
+  - id: toy_story_no_animation_u1
+    user_id: 1
+    tags: [sample]
+    turns:
+      - user: "I liked Toy Story but I'm tired of animated movies — what else?"
+        expect: {"tools": ["find_movie", "recommend"], "recommends": true, "exclude_genres": ["Animation"]}
+  - id: blind_spot_u1
+    user_id: 1
+    tags: [sample]
+    turns:
+      - user: "What's my blind spot? What genres am I missing?"
+        expect: {"tools": ["get_user_profile"]}
+  - id: tonight_u15
+    user_id: 15
+    tags: [sample]
+    turns:
+      - user: "What should I watch tonight?"
+        expect: {"tools": ["recommend"], "recommends": true}
+  - id: dark_thriller_u15
+    user_id: 15
+    tags: [sample]
+    turns:
+      - user: "I want a dark psychological thriller with a twist"
+        expect: {"tools": ["recommend"], "recommends": true}
+  - id: peers_pulp_fiction_u15
+    user_id: 15
+    tags: [sample]
+    turns:
+      - user: "What do people with similar taste to mine think about Pulp Fiction?"
+        expect: {"tools": ["find_movie", "peer_opinion"], "recommends": false}
+  - id: why_that_u15
+    user_id: 15
+    tags: [sample]
+    turns:
+      - user: "Recommend one movie for tonight."
+        expect: {"tools": ["recommend"], "recommends": true}
+      - user: "Why do you think I'd like that?"
+        expect: {"tools": ["explain"]}
+  - id: toy_story_no_animation_u15
+    user_id: 15
+    tags: [sample]
+    turns:
+      - user: "I liked Toy Story but I'm tired of animated movies — what else?"
+        expect: {"tools": ["find_movie", "recommend"], "recommends": true, "exclude_genres": ["Animation"]}
+  - id: blind_spot_u15
+    user_id: 15
+    tags: [sample]
+    turns:
+      - user: "What's my blind spot? What genres am I missing?"
+        expect: {"tools": ["get_user_profile"]}
+  - id: tonight_u30
+    user_id: 30
+    tags: [sample]
+    turns:
+      - user: "What should I watch tonight?"
+        expect: {"tools": ["recommend"], "recommends": true}
+  - id: dark_thriller_u30
+    user_id: 30
+    tags: [sample]
+    turns:
+      - user: "I want a dark psychological thriller with a twist"
+        expect: {"tools": ["recommend"], "recommends": true}
+  - id: peers_pulp_fiction_u30
+    user_id: 30
+    tags: [sample]
+    turns:
+      - user: "What do people with similar taste to mine think about Pulp Fiction?"
+        expect: {"tools": ["find_movie", "peer_opinion"], "recommends": false}
+  - id: why_that_u30
+    user_id: 30
+    tags: [sample]
+    turns:
+      - user: "Recommend one movie for tonight."
+        expect: {"tools": ["recommend"], "recommends": true}
+      - user: "Why do you think I'd like that?"
+        expect: {"tools": ["explain"]}
+  - id: toy_story_no_animation_u30
+    user_id: 30
+    tags: [sample]
+    turns:
+      - user: "I liked Toy Story but I'm tired of animated movies — what else?"
+        expect: {"tools": ["find_movie", "recommend"], "recommends": true, "exclude_genres": ["Animation"]}
+  - id: blind_spot_u30
+    user_id: 30
+    tags: [sample]
+    turns:
+      - user: "What's my blind spot? What genres am I missing?"
+        expect: {"tools": ["get_user_profile"]}
+  - id: matrix_absent_u15
+    user_id: 15
+    tags: [edge, absent]
+    turns:
+      - user: "What do people with similar taste to mine think about The Matrix?"
+        expect: {"tools": ["find_movie"], "forbid_tools": ["peer_opinion"], "recommends": false}
+  - id: ambiguous_psycho_u15
+    user_id: 15
+    tags: [edge, ambiguous]
+    turns:
+      - user: "What do people with similar taste to mine think about Psycho?"
+        expect: {"tools": ["find_movie"], "forbid_tools": ["peer_opinion"], "recommends": false}
+  - id: niche_peers_u30
+    user_id: 30
+    tags: [edge, sparse]
+    turns:
+      - user: "What do people with similar taste to mine think about Cry, the Beloved Country?"
+        expect: {"tools": ["find_movie", "peer_opinion"], "recommends": false}
+  - id: own_knowledge_u1
+    user_id: 1
+    tags: [edge, out_of_scope]
+    turns:
+      - user: "Forget the dataset and just use what you know: who directed Pulp Fiction, and what awards did it win?"
+        expect: {"recommends": false}
+  - id: no_animation_persists_u15
+    user_id: 15
+    tags: [edge, multi_turn, state]
+    turns:
+      - user: "I liked Toy Story but I'm tired of animated movies — what else?"
+        expect: {"tools": ["recommend"], "recommends": true, "exclude_genres": ["Animation"]}
+      - user: "Something more recent, from after 2005?"
+        expect: {"tools": ["recommend"], "recommends": true, "exclude_genres": ["Animation"]}
+      - user: "Now something funny."
+        expect: {"tools": ["recommend"], "recommends": true, "exclude_genres": ["Animation"]}
+  - id: unknown_user
+    user_id: 9999
+    tags: [edge, unknown_user]
+    turns:
+      - user: "What should I watch tonight?"
+        expect: {"recommends": false}

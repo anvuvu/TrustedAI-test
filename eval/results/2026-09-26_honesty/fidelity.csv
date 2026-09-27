@@ -1,0 +1,31 @@
+user_id,movie_id,title,driver,driver_movie_id,control_movie_id,driver_new_rank,driver_faithful,control_new_rank,control_faithful
+51,296,Pulp Fiction (1994),cf,593,3274,1,False,1,False
+52,296,Pulp Fiction (1994),cf,318,79132,2,False,1,False
+56,6,Heat (1995),cf,47,380,1,False,1,False
+77,1291,Indiana Jones and the Last Crusade (1989),content,1198,3578,4,False,1,False
+111,4011,Snatch (2000),cf,2329,94478,1,False,1,False
+119,4011,Snatch (2000),cf,2329,4446,1,False,1,False
+224,296,Pulp Fiction (1994),cf,593,1307,9,True,1,False
+245,2329,American History X (1998),content,3196,3101,1,False,1,False
+254,4011,Snatch (2000),cf,32587,836,1,False,1,False
+257,6,Heat (1995),content,16,7,1,False,1,False
+271,1199,Brazil (1985),cf,924,1805,1,False,1,False
+301,6,Heat (1995),cf,733,5989,3,False,2,False
+307,4027,"O Brother, Where Art Thou? (2000)",cf,2502,648,1,False,1,False
+312,1653,Gattaca (1997),cf,924,1644,1,False,1,False
+333,1291,Indiana Jones and the Last Crusade (1989),content,3578,924,32,True,1,False
+382,2329,American History X (1998),cf,2959,48598,2,False,1,False
+391,2329,American History X (1998),cf,2959,1265,1,False,1,False
+411,6,Heat (1995),cf,21,231,1,False,1,False
+427,4963,Ocean's Eleven (2001),cf,3578,1527,1,False,1,False
+437,296,Pulp Fiction (1994),cf,318,529,1,False,1,False
+451,296,Pulp Fiction (1994),cf,608,733,1,False,1,False
+453,6,Heat (1995),cf,733,4167,1,False,1,False
+469,1208,Apocalypse Now (1979),cf,750,1291,1,False,1,False
+473,2329,American History X (1998),cf,2959,318,1,False,3,False
+501,296,Pulp Fiction (1994),cf,50,616,1,False,1,False
+504,910,Some Like It Hot (1959),cf,345,4014,3,False,1,False
+560,1036,Die Hard (1988),cf,1291,34048,1,False,1,False
+578,1244,Manhattan (1979),content,52668,613,2,False,2,False
+599,555,True Romance (1993),cf,6,1476,2,False,1,False
+610,2329,American History X (1998),cf,2959,59615,1,False,1,False

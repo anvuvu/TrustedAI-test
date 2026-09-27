@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "movie-agent"
+version = "0.1.0"
+description = "Conversational movie discovery agent grounded in a MovieLens subset"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scipy>=1.11",
+    "pydantic>=2.5",
+    "typer>=0.12",
+    "pyyaml>=6.0",
+    "rapidfuzz>=3.6",
+    "sentence-transformers>=2.7",
+    "openai>=1.30",
+    "python-dotenv>=1.0",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[project.scripts]
+movie-agent = "movie_agent.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/movie_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["Exam", "*.md", "eval/results"]  # never reformat docs, the handout or saved results
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["B008"]  # typer.Option defaults in signatures are idiomatic
