@@ -211,7 +211,7 @@ def eval_honesty(config: Path | None = ConfigOpt) -> None:
 
 @app.command("report-tables")
 def report_tables(config: Path | None = ConfigOpt) -> None:
-    """Build report tables and figures from saved results (design §9.7)."""
+    """Build report tables and figures from saved results; refresh REPORT.md and REPORT.vi.md."""
     from movie_agent.evaluation.report_tables import run_report_tables
 
     load_dotenv(PROJECT_ROOT / ".env")

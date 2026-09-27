@@ -133,7 +133,7 @@ def test_report_tables_from_saved_results(cfg, ds, embedder, tmp_path):
     # a temporary report: the real REPORT.md must never receive fixture tables
     report = tmp_path / "REPORT.md"
     report.write_text("<!-- table:offline -->\nold\n<!-- /table:offline -->\n")
-    out = run_report_tables(cfg, report=report)
+    out = run_report_tables(cfg, reports=(report,))
     text = out.read_text()
     assert "## Offline ranking" in text and "## Honesty tests" in text
     assert (cfg.paths.results_dir / "figures" / "accuracy_by_system.png").exists()
@@ -239,3 +239,17 @@ def test_model_swap_table_pairs_turns_and_signs_the_difference(cfg, tmp_path):
     grounded = next(line for line in table.splitlines() if "rubric grounded" in line)
     assert "| 1.00 | 1.67 | -0.67" in grounded and "0 / 1 / 2" in grounded
     assert _model_swap_table(cfg, grading, tmp_path / "empty") == []
+
+
+def test_vietnamese_translations_stay_in_sync_with_the_english_documents():
+    """REPORT.vi.md carries the same generated tables as REPORT.md; each pair links to the other."""
+    from movie_agent.config import PROJECT_ROOT
+    from movie_agent.evaluation.report_tables import _MARKER
+
+    def blocks(text):
+        return {m.group(2): m.group(3).strip() for m in _MARKER.finditer(text)}
+
+    for en, vi in (("REPORT.md", "REPORT.vi.md"), ("README.md", "README.vi.md")):
+        en_text, vi_text = (PROJECT_ROOT / en).read_text(), (PROJECT_ROOT / vi).read_text()
+        assert blocks(vi_text) == blocks(en_text)
+        assert f"]({vi})" in en_text and f"]({en})" in vi_text
