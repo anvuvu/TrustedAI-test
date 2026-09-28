@@ -8,6 +8,12 @@ Trợ lý hội thoại giúp một người dùng MovieLens tìm phim bằng c�
 - **Thiết kế:** [`docs/design.md`](docs/design.md) · **Sổ ghi chép:** [`docs/notes.md`](docs/notes.md) (tiếng Anh)
 - **Đề bài và dữ liệu:** [`Exam/`](Exam/) (nguyên bản được giao, chỉ đọc)
 
+## Demo
+
+Một phiên `movie-agent chat --user 15` bằng tiếng Việt (3 phút 45 giây): năm trong sáu câu hỏi mẫu của đề bài, sau đó là các câu hỏi tiếp về phim mới hơn, phim hài, và phim The Matrix, vốn không có trong bộ dữ liệu (agent trả lời đúng như vậy). Sau mỗi câu trả lời, CLI in ra các tool đã gọi và kết quả verifier.
+
+https://github.com/user-attachments/assets/a3c7d0c5-dd9f-4cc7-a897-6d72f838e863
+
 ## Cách hoạt động
 
 ```

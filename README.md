@@ -8,6 +8,12 @@ A conversational assistant that helps a MovieLens user discover movies by invest
 - **Design:** [`docs/design.md`](docs/design.md) · **Lab notebook:** [`docs/notes.md`](docs/notes.md)
 - **Brief and data:** [`Exam/`](Exam/) (the unmodified handout, read-only)
 
+## Demo
+
+A `movie-agent chat --user 15` session in Vietnamese (3 min 45 s): five of the six sample queries from the brief, then follow-ups asking for newer films, a comedy, and The Matrix, which is not in the dataset (the agent says so). After each answer the CLI prints the tools called and the verifier result.
+
+https://github.com/user-attachments/assets/a3c7d0c5-dd9f-4cc7-a897-6d72f838e863
+
 ## How it works
 
 ```
